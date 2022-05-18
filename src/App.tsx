@@ -1,25 +1,45 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { css } from "@emotion/react";
+import Controls from "./components/Controls";
+import Bullets from "./entities/Bullets";
+import Enemies from "./entities/Enemies";
+import Tower from "./entities/Tower";
+import { useScreenRef } from "./state/screen";
+import GameLoop from "./systems/GameLoop";
+
+const layoutCss = css`
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  background: #222;
+  color: #fff;
+  font-family: monospace;
+`;
+
+const sceneCss = css`
+  width: 66%;
+  position: relative;
+  overflow: hidden;
+`;
+
+const controlsCss = css`
+  width: 34%;
+`;
 
 function App() {
+  const setScreenRef = useScreenRef();
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <GameLoop>
+      <div css={layoutCss}>
+        <div css={sceneCss} ref={setScreenRef}>
+          <Tower />
+          <Enemies />
+          <Bullets />
+        </div>
+        <div css={controlsCss}>
+          <Controls />
+        </div>
+      </div>
+    </GameLoop>
   );
 }
 
