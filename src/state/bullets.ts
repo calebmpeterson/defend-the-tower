@@ -19,3 +19,8 @@ export const bulletsCountState = selector<number>({
 });
 
 export const useBulletsCount = () => useRecoilValue(bulletsCountState);
+
+export const bulletDamageState = atom<number>({
+  key: "bullets/damage",
+  default: 10,
+});

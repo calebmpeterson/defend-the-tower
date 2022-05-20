@@ -1,14 +1,20 @@
-import { first, sortBy, sum } from "lodash";
+import { first, groupBy, map, size, sortBy, sum, without } from "lodash";
 import { atom, useRecoilTransaction_UNSTABLE, useRecoilValue } from "recoil";
-import { BULLET_SPEED } from "../entities/Bullet";
+import { BULLET_SIZE, BULLET_SPEED } from "../entities/Bullet";
 import { TOWER_SIZE } from "../entities/Tower";
 import type { Enemy as EnemyType } from "../types";
+import createEnemy from "../utils/createEnemy";
 import { distance } from "../utils/Trigonometry";
-import { bulletsState, timeOfLastShotState } from "./bullets";
-import { enemiesState } from "./enemies";
+import {
+  bulletsState,
+  timeOfLastShotState,
+  bulletDamageState,
+} from "./bullets";
+import { enemiesState, enemySpawnRateState } from "./enemies";
 import { gameState } from "./game";
+import { scoreState } from "./score";
 import { screenState } from "./screen";
-import { healthState, rateOfFireState } from "./tower";
+import { healthState, rateOfFireState, regenerationRateState } from "./tower";
 
 const elapsedState = atom<number>({
   key: "clock/elapsed",
@@ -71,8 +77,9 @@ export const useUpdate = () =>
           )
         );
 
+        const shotDelay = 500 / get(rateOfFireState);
         const canShoot =
-          get(elapsedState) - get(timeOfLastShotState) > get(rateOfFireState);
+          get(elapsedState) - get(timeOfLastShotState) > shotDelay;
 
         // Shoot at the closest enemy (if there is one)
         if (closestEnemy && canShoot) {
@@ -82,30 +89,21 @@ export const useUpdate = () =>
 
           set(bulletsState, (bullets) => [
             ...bullets,
-            { id: `bullet-${Date.now()}`, angle, position: towerPosition },
+            {
+              id: `bullet-${Date.now()}`,
+              angle,
+              position: towerPosition,
+              damage: get(bulletDamageState),
+            },
           ]);
 
           set(timeOfLastShotState, get(elapsedState));
         }
 
         // Maybe spawn a new enemy
-        if (Math.random() > 0.99) {
-          const angle = Math.random() * 2 * Math.PI;
+        if (Math.random() < get(enemySpawnRateState) / 100) {
           const distance = screenMinimum * 0.8;
-          const x = towerPosition.x + Math.cos(angle) * distance;
-          const y = towerPosition.y + Math.sin(angle) * distance;
-          const size = 10;
-          const newEnemy: EnemyType = {
-            id: `enemy-${Date.now()}`,
-            size,
-            health: 20,
-            speed: 100,
-            color: "#f00",
-            position: {
-              x,
-              y,
-            },
-          };
+          const newEnemy = createEnemy(towerPosition, distance);
 
           set(enemiesState, [...approachingEnemies, newEnemy]);
         } else {
@@ -129,7 +127,7 @@ export const useUpdate = () =>
         });
 
         // Remove all bullets outside of the game scene
-        const aliveBullets = updatedBullets.filter(
+        const onScreenBullets = updatedBullets.filter(
           (bullet) =>
             bullet.position.x >= 0 &&
             bullet.position.x <= screen.width &&
@@ -137,11 +135,59 @@ export const useUpdate = () =>
             bullet.position.y <= screen.height
         );
 
-        set(bulletsState, aliveBullets);
+        set(bulletsState, onScreenBullets);
 
-        // Update the player's health
+        // Collision detect bullets and enemies
+        {
+          const activeEnemies = get(enemiesState);
+          const activeBullets = get(bulletsState);
+          const deadBullets = [];
+          const enemyHits = [];
+
+          // TODO: check every bullet against every enemy, updating/destroying as appropriate
+          for (const enemy of activeEnemies) {
+            for (const bullet of activeBullets) {
+              if (
+                distance(enemy.position, bullet.position) <
+                (enemy.size + BULLET_SIZE) / 2
+              ) {
+                deadBullets.push(bullet);
+                enemyHits.push({
+                  id: enemy.id,
+                  damage: bullet.damage,
+                });
+              }
+            }
+          }
+
+          const hitsByEnemyId = groupBy(enemyHits, "id");
+          const updatedEnemies = activeEnemies.map((enemy) => ({
+            ...enemy,
+            health: enemy.health - sum(map(hitsByEnemyId[enemy.id], "damage")),
+          }));
+
+          set(
+            enemiesState,
+            updatedEnemies.filter((enemy) => enemy.health > 0)
+          );
+          set(bulletsState, without(activeBullets, ...deadBullets));
+
+          // Update the score
+          const destroyedEnemies = updatedEnemies.filter(
+            (enemy) => enemy.health <= 0
+          );
+          const pointsToAdd = sum(
+            destroyedEnemies.map((enemy) => enemy.points)
+          );
+          set(scoreState, (score) => score + pointsToAdd);
+        }
+
+        // Update the tower's health
+        const regenerationRate = get(regenerationRateState);
+        set(healthState, (h) => h + (regenerationRate * deltaT) / 1000);
+
         const totalDamage = sum(collidedEnemies.map((enemy) => enemy.health));
-        set(healthState, (h) => (h -= totalDamage));
+        set(healthState, (h) => Math.max((h -= totalDamage), 0));
 
         // Update the game state
         set(gameState, get(healthState) > 0 ? "running" : "defeat");

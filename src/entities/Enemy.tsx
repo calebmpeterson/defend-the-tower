@@ -10,6 +10,7 @@ const enemyCss = (props: EnemyProps) => css`
   border: 1px solid ${props.color};
   box-sizing: border-box;
   border-radius: ${props.size / 2}px;
+  box-shadow: 0 0 ${props.size / 3}px 1px ${props.color}6;
 `;
 
 const Enemy: FC<EnemyProps> = (props) => (

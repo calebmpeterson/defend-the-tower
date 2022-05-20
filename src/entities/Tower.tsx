@@ -11,8 +11,8 @@ const towerCss = css`
   position: absolute;
   width: ${SIZE}px;
   height: ${SIZE}px;
-  border: 1px solid #fff;
-  border-radius: ${SIZE / 2}px;
+  border: 2px solid #fff;
+  border-radius: ${SIZE}px;
 `;
 
 const Tower: FC = () => {

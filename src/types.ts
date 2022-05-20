@@ -17,10 +17,13 @@ export type Enemy = {
   size: number;
   health: number;
   color: string;
+  /** How many points is this enemy worth when destroyed */
+  points: number;
 };
 
 export type Bullet = {
   id: string;
   position: Position;
   angle: number;
+  damage: number;
 };

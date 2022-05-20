@@ -10,7 +10,7 @@ export const BULLET_SIZE = SIZE;
 
 export const BULLET_SPEED = 200;
 
-const bulletCss = (props: BulletProps) => css`
+const bulletCss = css`
   position: absolute;
   width: ${SIZE}px;
   height: ${SIZE}px;
@@ -22,7 +22,7 @@ const bulletCss = (props: BulletProps) => css`
 
 const Bullet: FC<BulletProps> = (props) => (
   <div
-    css={bulletCss(props)}
+    css={bulletCss}
     style={position(props.position.x, props.position.y, SIZE)}
   />
 );
