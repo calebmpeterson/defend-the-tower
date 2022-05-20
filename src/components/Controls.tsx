@@ -125,6 +125,7 @@ const headerCss = css`
   display: flex;
   align-items: center;
   gap: 5px;
+  color: #888;
 `;
 
 interface HeaderProps {
@@ -132,7 +133,7 @@ interface HeaderProps {
 }
 const Header: FC<PropsWithChildren<HeaderProps>> = ({ children, iconPath }) => (
   <h3 css={headerCss}>
-    <Icon path={iconPath} size={1} />
+    <Icon color="currentColor" path={iconPath} size={0.7} />
     {children}
   </h3>
 );
