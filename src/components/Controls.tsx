@@ -1,6 +1,7 @@
 import { css } from "@emotion/react";
 import { ChangeEvent, FC, useCallback, PropsWithChildren } from "react";
 import { RecoilState, useRecoilState } from "recoil";
+import Icon from "@mdi/react";
 import { bulletDamageState, useBulletsCount } from "../state/bullets";
 import { enemySpawnRateState } from "../state/enemies";
 import { useGameState } from "../state/game";
@@ -14,6 +15,12 @@ import {
   useTowerHealthMax,
 } from "../state/tower";
 import { useElapsed } from "../state/update";
+import {
+  mdiAtomVariant,
+  mdiChessRook,
+  mdiShield,
+  mdiSwordCross,
+} from "@mdi/js";
 
 const layoutCss = css`
   display: flex;
@@ -115,10 +122,19 @@ const RangeControl: FC<RangeControlProps> = ({
 
 const headerCss = css`
   margin: 20px 0 0 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 `;
 
-const Header: FC<PropsWithChildren<{}>> = ({ children }) => (
-  <h3 css={headerCss}>{children}</h3>
+interface HeaderProps {
+  iconPath: string;
+}
+const Header: FC<PropsWithChildren<HeaderProps>> = ({ children, iconPath }) => (
+  <h3 css={headerCss}>
+    <Icon path={iconPath} size={1} />
+    {children}
+  </h3>
 );
 
 const Controls = () => {
@@ -131,12 +147,12 @@ const Controls = () => {
 
   return (
     <div css={layoutCss}>
-      <Header>Defend the Tower</Header>
+      <Header iconPath={mdiChessRook}>Defend the Tower</Header>
       <Data label="Game state" value={gameState} />
       <Data label="Score" value={score} />
       <Data label="Elapsed time" value={(elapsed / 1000).toFixed(2)} />
 
-      <Header>Enemies</Header>
+      <Header iconPath={mdiAtomVariant}>Enemies</Header>
       <RangeControl
         label="Spawn rate"
         recoilState={enemySpawnRateState}
@@ -144,7 +160,7 @@ const Controls = () => {
         max={66}
       />
 
-      <Header>Defense</Header>
+      <Header iconPath={mdiShield}>Defense</Header>
       <RangeDisplay label="Tower health" max={maxHealth} value={health} />
       <RangeControl
         label="Max health"
@@ -159,7 +175,7 @@ const Controls = () => {
         max={20}
       />
 
-      <Header>Offense</Header>
+      <Header iconPath={mdiSwordCross}>Offense</Header>
       <Data label="Bullets (active)" value={bulletsCount} />
       <RangeControl
         label="Rate of fire"
