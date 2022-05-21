@@ -101,7 +101,10 @@ export const useUpdate = () =>
         }
 
         // Maybe spawn a new enemy
-        if (Math.random() < get(enemySpawnRateState) / 100) {
+        if (
+          Math.random() <
+          (get(enemySpawnRateState) + get(elapsedState) / 100000) / 100
+        ) {
           const distance = screenMinimum * 0.8;
           const newEnemy = createEnemy(towerPosition, distance);
 

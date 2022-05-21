@@ -21,6 +21,8 @@ import {
   mdiShield,
   mdiSwordCross,
 } from "@mdi/js";
+import ControlRow from "./ControlRow";
+import UpgradeButton from "./UpgradeButton";
 
 const layoutCss = css`
   display: flex;
@@ -115,7 +117,7 @@ const RangeControl: FC<RangeControlProps> = ({
         value={value}
         onChange={onChange}
       />
-      <div css={valueCss}>{value}</div>
+      <div css={valueCss}>{value.toFixed(2)}</div>
     </div>
   );
 };
@@ -124,8 +126,9 @@ const headerCss = css`
   margin: 20px 0 0 0;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 5px;
-  color: #888;
+  color: #bbb;
 `;
 
 interface HeaderProps {
@@ -145,6 +148,16 @@ const Controls = () => {
   const gameState = useGameState();
   const bulletsCount = useBulletsCount();
   const score = useScore();
+
+  const [rateOfFire, setRateOfFire] = useRecoilState(rateOfFireState);
+  const onUpgradeRateOfFire = () => {
+    setRateOfFire((r) => r + 0.1);
+  };
+
+  const [bulletDamage, setBulletDamage] = useRecoilState(bulletDamageState);
+  const onUpgradeBulletDamage = () => {
+    setBulletDamage((r) => r + 1);
+  };
 
   return (
     <div css={layoutCss}>
@@ -178,18 +191,21 @@ const Controls = () => {
 
       <Header iconPath={mdiSwordCross}>Offense</Header>
       <Data label="Bullets (active)" value={bulletsCount} />
-      <RangeControl
-        label="Rate of fire"
-        recoilState={rateOfFireState}
-        min={1}
-        max={10}
-      />
-      <RangeControl
-        label="Bullet damage"
-        recoilState={bulletDamageState}
-        min={10}
-        max={50}
-      />
+
+      <ControlRow>
+        <UpgradeButton
+          property="rate-of-fire"
+          label="Rate of fire"
+          value={rateOfFire.toFixed(2)}
+          onUpgrade={onUpgradeRateOfFire}
+        />
+        <UpgradeButton
+          property="bullet-damage"
+          label="Shot damage"
+          value={bulletDamage.toFixed(0)}
+          onUpgrade={onUpgradeBulletDamage}
+        />
+      </ControlRow>
     </div>
   );
 };
