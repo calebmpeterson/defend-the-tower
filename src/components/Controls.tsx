@@ -3,7 +3,7 @@ import { ChangeEvent, FC, useCallback, PropsWithChildren } from "react";
 import { RecoilState, useRecoilState } from "recoil";
 import Icon from "@mdi/react";
 import { bulletDamageState, useBulletsCount } from "../state/bullets";
-import { enemySpawnRateState, useEnemiesCount } from "../state/enemies";
+import { enemySpawnRateState } from "../state/enemies";
 import { useGameState } from "../state/game";
 import { useScore } from "../state/score";
 import {
@@ -22,7 +22,6 @@ import {
 } from "@mdi/js";
 import ControlRow from "./ControlRow";
 import UpgradeButton from "./UpgradeButton";
-import { useExplosionsCount } from "../state/explosions";
 
 const layoutCss = css`
   display: flex;
@@ -64,20 +63,6 @@ const Data: FC<DataProps> = ({ label, value }) => (
   <div css={controlLayoutCss}>
     <div css={labelCss}>{label}</div>
     <div>{value}</div>
-  </div>
-);
-
-interface RangeDisplayProps {
-  label: string;
-  max: number;
-  value: number;
-}
-
-const RangeDisplay: FC<RangeDisplayProps> = ({ label, value, max }) => (
-  <div css={controlLayoutCss}>
-    <div css={labelCss}>{label}</div>
-    <progress max={max} value={value} css={rangeCss} />
-    <div css={valueCss}>{value.toFixed(0)}</div>
   </div>
 );
 
@@ -145,9 +130,7 @@ const Controls = () => {
   const elapsed = useElapsed();
   const health = useTowerHealth();
   const gameState = useGameState();
-  const enemiesCount = useEnemiesCount();
   const bulletsCount = useBulletsCount();
-  const explosionsCount = useExplosionsCount();
   const score = useScore();
 
   const [maxHealth, setMaxHealth] = useRecoilState(maxHealthState);
@@ -183,12 +166,9 @@ const Controls = () => {
       <Header iconPath={mdiChessRook}>Defend the Tower</Header>
       <Data label="Game state" value={gameState} />
       <Data label="Score" value={score} />
-      <Data label="Elapsed time" value={(elapsed / 1000).toFixed(2)} />
+      <Data label="Elapsed time" value={(elapsed / 1000).toFixed(0)} />
 
       <Header iconPath={mdiAtomVariant}>Enemies</Header>
-      <Data label="Enemies (active)" value={enemiesCount} />
-      <Data label="Explosions (active)" value={explosionsCount} />
-
       <RangeControl
         label="Spawn rate"
         recoilState={enemySpawnRateState}
