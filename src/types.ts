@@ -27,3 +27,13 @@ export type Bullet = {
   angle: number;
   damage: number;
 };
+
+export type Explosion = {
+  id: string;
+  position: Position;
+  color: string;
+  /** When did this explosion start? */
+  startTime: number;
+  /** How long will this explosion last? */
+  duration: number;
+};

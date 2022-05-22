@@ -1,7 +1,9 @@
 import { first, groupBy, map, sortBy, sum, without } from "lodash";
 import { atom, useRecoilTransaction_UNSTABLE, useRecoilValue } from "recoil";
+import { v4 as uuid4 } from "uuid";
 import { BULLET_SIZE, BULLET_SPEED } from "../entities/Bullet";
 import { TOWER_SIZE } from "../entities/Tower";
+import { Explosion } from "../types";
 import createEnemy from "../utils/createEnemy";
 import { distance } from "../utils/Trigonometry";
 import {
@@ -10,6 +12,7 @@ import {
   bulletDamageState,
 } from "./bullets";
 import { enemiesState, enemySpawnRateState } from "./enemies";
+import { explosionsState } from "./explosions";
 import { gameState } from "./game";
 import { scoreState } from "./score";
 import { screenState } from "./screen";
@@ -186,14 +189,36 @@ export const useUpdate = () =>
           );
           set(bulletsState, without(activeBullets, ...deadBullets));
 
-          // Update the score
           const destroyedEnemies = updatedEnemies.filter(
             (enemy) => enemy.health <= 0
           );
+
+          // Update the score
           const pointsToAdd = sum(
             destroyedEnemies.map((enemy) => enemy.points)
           );
           set(scoreState, (score) => score + pointsToAdd);
+
+          // Create an explosion for each destroyed enemy
+          const newExplosions: Explosion[] = destroyedEnemies.map((enemy) => ({
+            id: uuid4(),
+            startTime: get(elapsedState),
+            duration: 500,
+            position: enemy.position,
+            color: enemy.color,
+          }));
+          set(explosionsState, (explosions) => [
+            ...explosions,
+            ...newExplosions,
+          ]);
+
+          // Remove any "expired" explosions
+          set(explosionsState, (explosions) =>
+            explosions.filter(
+              (explosion) =>
+                get(elapsedState) - explosion.startTime < explosion.duration
+            )
+          );
         }
 
         // Update the tower's health

@@ -2,6 +2,7 @@ import { css } from "@emotion/react";
 import Controls from "./components/Controls";
 import Bullets from "./entities/Bullets";
 import Enemies from "./entities/Enemies";
+import Explosions from "./entities/Explosions";
 import TargetingRangeIndicator from "./entities/TargetingRangeIndicator";
 import Tower from "./entities/Tower";
 import { useScreenRef } from "./state/screen";
@@ -36,6 +37,7 @@ function App() {
           <TargetingRangeIndicator />
           <Enemies />
           <Bullets />
+          <Explosions />
         </div>
         <div css={controlsCss}>
           <Controls />

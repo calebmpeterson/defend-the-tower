@@ -22,6 +22,7 @@ import {
 } from "@mdi/js";
 import ControlRow from "./ControlRow";
 import UpgradeButton from "./UpgradeButton";
+import { useExplosionsCount } from "../state/explosions";
 
 const layoutCss = css`
   display: flex;
@@ -146,6 +147,7 @@ const Controls = () => {
   const gameState = useGameState();
   const enemiesCount = useEnemiesCount();
   const bulletsCount = useBulletsCount();
+  const explosionsCount = useExplosionsCount();
   const score = useScore();
 
   const [maxHealth, setMaxHealth] = useRecoilState(maxHealthState);
@@ -185,6 +187,8 @@ const Controls = () => {
 
       <Header iconPath={mdiAtomVariant}>Enemies</Header>
       <Data label="Enemies (active)" value={enemiesCount} />
+      <Data label="Explosions (active)" value={explosionsCount} />
+
       <RangeControl
         label="Spawn rate"
         recoilState={enemySpawnRateState}

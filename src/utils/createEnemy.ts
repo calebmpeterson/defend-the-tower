@@ -13,7 +13,7 @@ const VARIANTS: EnemyVariant[] = flattenDeep([
   variant(25, {
     size: 10,
     speed: 100,
-    color: "#f03",
+    color: "#f02",
     points: 10,
     health: 20,
   }),
@@ -21,7 +21,7 @@ const VARIANTS: EnemyVariant[] = flattenDeep([
   variant(10, {
     size: 6,
     speed: 160,
-    color: "#f04",
+    color: "#f03",
     points: 15,
     health: 20,
   }),
@@ -29,7 +29,7 @@ const VARIANTS: EnemyVariant[] = flattenDeep([
   variant(5, {
     size: 20,
     speed: 60,
-    color: "#f05",
+    color: "#f04",
     points: 25,
     health: 40,
   }),
@@ -37,9 +37,9 @@ const VARIANTS: EnemyVariant[] = flattenDeep([
   variant(1, {
     size: 40,
     speed: 20,
-    color: "#f06",
+    color: "#f05",
     points: 50,
-    health: 400,
+    health: 200,
   }),
 ]);
 
