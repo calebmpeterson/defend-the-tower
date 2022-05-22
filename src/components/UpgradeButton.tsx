@@ -22,7 +22,7 @@ const buttonCss = css`
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  width: 50%;
+  width: 100%;
   box-sizing: border-box;
 
   background-color: transparent;

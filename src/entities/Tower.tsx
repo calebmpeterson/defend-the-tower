@@ -1,6 +1,6 @@
 import { css } from "@emotion/react";
 import { FC } from "react";
-import { useScreen } from "../state/screen";
+import { useTowerPosition } from "../state/tower";
 import { position } from "../utils/Geometry";
 
 const SIZE = 20;
@@ -16,9 +16,7 @@ const towerCss = css`
 `;
 
 const Tower: FC = () => {
-  const screen = useScreen();
-  const x = screen.width / 2;
-  const y = screen.height / 2;
+  const { x, y } = useTowerPosition();
   return <div css={towerCss} style={position(x, y, SIZE)} />;
 };
 

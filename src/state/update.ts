@@ -1,8 +1,7 @@
-import { first, groupBy, map, size, sortBy, sum, without } from "lodash";
+import { first, groupBy, map, sortBy, sum, without } from "lodash";
 import { atom, useRecoilTransaction_UNSTABLE, useRecoilValue } from "recoil";
 import { BULLET_SIZE, BULLET_SPEED } from "../entities/Bullet";
 import { TOWER_SIZE } from "../entities/Tower";
-import type { Enemy as EnemyType } from "../types";
 import createEnemy from "../utils/createEnemy";
 import { distance } from "../utils/Trigonometry";
 import {
@@ -14,7 +13,13 @@ import { enemiesState, enemySpawnRateState } from "./enemies";
 import { gameState } from "./game";
 import { scoreState } from "./score";
 import { screenState } from "./screen";
-import { healthState, rateOfFireState, regenerationRateState } from "./tower";
+import {
+  healthState,
+  maxHealthState,
+  rateOfFireState,
+  regenerationRateState,
+  targetingRangeState,
+} from "./tower";
 
 const elapsedState = atom<number>({
   key: "clock/elapsed",
@@ -77,12 +82,18 @@ export const useUpdate = () =>
           )
         );
 
+        // Is the target within range?
+        const targetingRange = get(targetingRangeState);
+        const isEnemyWithinRange = Boolean(
+          closestEnemy &&
+            distance(towerPosition, closestEnemy.position) < targetingRange
+        );
         const shotDelay = 500 / get(rateOfFireState);
         const canShoot =
           get(elapsedState) - get(timeOfLastShotState) > shotDelay;
 
         // Shoot at the closest enemy (if there is one)
-        if (closestEnemy && canShoot) {
+        if (closestEnemy && isEnemyWithinRange && canShoot) {
           const dx = closestEnemy.position.x - towerPosition.x;
           const dy = closestEnemy.position.y - towerPosition.y;
           const angle = Math.atan2(dy, dx);
@@ -187,7 +198,9 @@ export const useUpdate = () =>
 
         // Update the tower's health
         const regenerationRate = get(regenerationRateState);
-        set(healthState, (h) => h + (regenerationRate * deltaT) / 1000);
+        set(healthState, (h) =>
+          Math.min(get(maxHealthState), h + (regenerationRate * deltaT) / 1000)
+        );
 
         const totalDamage = sum(collidedEnemies.map((enemy) => enemy.health));
         set(healthState, (h) => Math.max((h -= totalDamage), 0));

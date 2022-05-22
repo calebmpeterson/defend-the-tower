@@ -8,6 +8,8 @@ export const enemiesState = atom<Enemy[]>({
 
 export const useEnemies = () => useRecoilValue(enemiesState);
 
+export const useEnemiesCount = () => useRecoilValue(enemiesState).length;
+
 export const enemySpawnRateState = atom<number>({
   key: "enemies/spawnRate",
   default: 1,

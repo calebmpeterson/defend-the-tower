@@ -3,16 +3,15 @@ import { ChangeEvent, FC, useCallback, PropsWithChildren } from "react";
 import { RecoilState, useRecoilState } from "recoil";
 import Icon from "@mdi/react";
 import { bulletDamageState, useBulletsCount } from "../state/bullets";
-import { enemySpawnRateState } from "../state/enemies";
+import { enemySpawnRateState, useEnemiesCount } from "../state/enemies";
 import { useGameState } from "../state/game";
 import { useScore } from "../state/score";
 import {
-  DEFAULT_TOWER_HEALTH,
   maxHealthState,
   rateOfFireState,
   regenerationRateState,
+  targetingRangeState,
   useTowerHealth,
-  useTowerHealthMax,
 } from "../state/tower";
 import { useElapsed } from "../state/update";
 import {
@@ -144,10 +143,22 @@ const Header: FC<PropsWithChildren<HeaderProps>> = ({ children, iconPath }) => (
 const Controls = () => {
   const elapsed = useElapsed();
   const health = useTowerHealth();
-  const maxHealth = useTowerHealthMax();
   const gameState = useGameState();
+  const enemiesCount = useEnemiesCount();
   const bulletsCount = useBulletsCount();
   const score = useScore();
+
+  const [maxHealth, setMaxHealth] = useRecoilState(maxHealthState);
+  const onUpgradeMaxHealth = () => {
+    setMaxHealth((m) => m + 10);
+  };
+
+  const [regenerationRate, setRegenerationRate] = useRecoilState(
+    regenerationRateState
+  );
+  const onUpgradeRegenerationRate = () => {
+    setRegenerationRate((r) => r + 0.2);
+  };
 
   const [rateOfFire, setRateOfFire] = useRecoilState(rateOfFireState);
   const onUpgradeRateOfFire = () => {
@@ -159,6 +170,12 @@ const Controls = () => {
     setBulletDamage((r) => r + 1);
   };
 
+  const [targetingRange, setTargetingRange] =
+    useRecoilState(targetingRangeState);
+  const onUpgradeTargetingRange = () => {
+    setTargetingRange((r) => r + 2);
+  };
+
   return (
     <div css={layoutCss}>
       <Header iconPath={mdiChessRook}>Defend the Tower</Header>
@@ -167,6 +184,7 @@ const Controls = () => {
       <Data label="Elapsed time" value={(elapsed / 1000).toFixed(2)} />
 
       <Header iconPath={mdiAtomVariant}>Enemies</Header>
+      <Data label="Enemies (active)" value={enemiesCount} />
       <RangeControl
         label="Spawn rate"
         recoilState={enemySpawnRateState}
@@ -175,19 +193,20 @@ const Controls = () => {
       />
 
       <Header iconPath={mdiShield}>Defense</Header>
-      <RangeDisplay label="Tower health" max={maxHealth} value={health} />
-      <RangeControl
-        label="Max health"
-        recoilState={maxHealthState}
-        min={DEFAULT_TOWER_HEALTH}
-        max={DEFAULT_TOWER_HEALTH * 10}
-      />
-      <RangeControl
-        label="Regeneration"
-        recoilState={regenerationRateState}
-        min={0}
-        max={20}
-      />
+      <ControlRow>
+        <UpgradeButton
+          property="max-health"
+          label="Health"
+          value={`${health.toFixed(0)} / ${maxHealth.toFixed(0)}`}
+          onUpgrade={onUpgradeMaxHealth}
+        />
+        <UpgradeButton
+          property="regeneration-rate"
+          label="Health regeneration"
+          value={regenerationRate.toFixed(2)}
+          onUpgrade={onUpgradeRegenerationRate}
+        />
+      </ControlRow>
 
       <Header iconPath={mdiSwordCross}>Offense</Header>
       <Data label="Bullets (active)" value={bulletsCount} />
@@ -204,6 +223,15 @@ const Controls = () => {
           label="Shot damage"
           value={bulletDamage.toFixed(0)}
           onUpgrade={onUpgradeBulletDamage}
+        />
+      </ControlRow>
+
+      <ControlRow>
+        <UpgradeButton
+          property="targeting-range"
+          label="Targeting range"
+          value={targetingRange.toFixed(0)}
+          onUpgrade={onUpgradeTargetingRange}
         />
       </ControlRow>
     </div>
