@@ -1,10 +1,12 @@
 import { css } from "@emotion/react";
 import Controls from "./components/Controls";
+import GameOver from "./components/GameOver";
 import Bullets from "./entities/Bullets";
 import Enemies from "./entities/Enemies";
 import Explosions from "./entities/Explosions";
 import TargetingRangeIndicator from "./entities/TargetingRangeIndicator";
 import Tower from "./entities/Tower";
+import { useGameState } from "./state/game";
 import { useScreenRef } from "./state/screen";
 import GameLoop from "./systems/GameLoop";
 
@@ -17,6 +19,12 @@ const layoutCss = css`
   font-family: monospace;
 `;
 
+const overlayCss = (state: string) =>
+  state === "defeat" &&
+  css`
+    filter: blur(4px);
+  `;
+
 const sceneCss = css`
   width: 66%;
   position: relative;
@@ -28,10 +36,11 @@ const controlsCss = css`
 `;
 
 function App() {
+  const state = useGameState();
   const setScreenRef = useScreenRef();
   return (
     <GameLoop>
-      <div css={layoutCss}>
+      <div css={[layoutCss, overlayCss(state)]}>
         <div css={sceneCss} ref={setScreenRef}>
           <Tower />
           <TargetingRangeIndicator />
@@ -43,6 +52,7 @@ function App() {
           <Controls />
         </div>
       </div>
+      {state === "defeat" && <GameOver />}
     </GameLoop>
   );
 }

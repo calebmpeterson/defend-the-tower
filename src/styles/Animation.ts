@@ -1,4 +1,4 @@
-export const transitionDuration = 500;
+export const transitionDuration = "200ms";
 export const transitionTimingFunction = "ease-in-out";
 
 export const transition = (...attrs: string[]) =>
