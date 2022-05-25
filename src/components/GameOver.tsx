@@ -46,7 +46,7 @@ const GameOver: FC = () => {
       <h1>Final score {score}</h1>
       <div>
         <button css={buttonCss} onClick={onReset}>
-          Try again
+          Play again
         </button>
       </div>
     </div>
