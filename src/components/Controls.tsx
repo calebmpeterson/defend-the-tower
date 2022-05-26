@@ -2,7 +2,11 @@ import { css } from "@emotion/react";
 import { ChangeEvent, FC, useCallback, PropsWithChildren } from "react";
 import { RecoilState, useRecoilState } from "recoil";
 import Icon from "@mdi/react";
-import { bulletDamageState, useBulletsCount } from "../state/bullets";
+import {
+  bulletDamageState,
+  useBulletsCount,
+  targetingCapabilityState,
+} from "../state/bullets";
 import { enemySpawnRateState } from "../state/enemies";
 import { useGameState } from "../state/game";
 import { useScore } from "../state/score";
@@ -161,6 +165,13 @@ const Controls = () => {
     setTargetingRange((r) => r + 2);
   };
 
+  const [targetingCapability, setTargetingCapability] = useRecoilState(
+    targetingCapabilityState
+  );
+  const onUpgradeTargetingCapability = () => {
+    setTargetingCapability((c) => c + 1);
+  };
+
   return (
     <div css={layoutCss}>
       <Header iconPath={mdiChessRook}>Defend the Tower</Header>
@@ -216,6 +227,12 @@ const Controls = () => {
           label="Targeting range"
           value={targetingRange.toFixed(0)}
           onUpgrade={onUpgradeTargetingRange}
+        />
+        <UpgradeButton
+          property="target-capability"
+          label="Maximum targets"
+          value={targetingCapability.toFixed(0)}
+          onUpgrade={onUpgradeTargetingCapability}
         />
       </ControlRow>
     </div>

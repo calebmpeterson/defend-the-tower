@@ -62,7 +62,7 @@ const costOfUpgradeCss = (canUpgrade: boolean) => css`
 
 const UpgradeButton: FC<Props> = ({ label, value, property, onUpgrade }) => {
   const [level, setLevel] = useRecoilState(upgradeState(property));
-  const costOfUpgrade = getUpgradeCost(level);
+  const costOfUpgrade = getUpgradeCost(property, level);
   const canUpgrade = useCanAffordUpgrade(costOfUpgrade);
   const payForUpgrade = usePayForUpgrade();
 

@@ -1,4 +1,4 @@
-import { first, groupBy, map, sortBy, sum, without } from "lodash";
+import { groupBy, isEmpty, map, sortBy, sum, take, without } from "lodash";
 import { atom, useRecoilTransaction_UNSTABLE, useRecoilValue } from "recoil";
 import { v4 as uuid4 } from "uuid";
 import { BULLET_SIZE, BULLET_SPEED } from "../entities/Bullet";
@@ -10,6 +10,7 @@ import {
   bulletsState,
   timeOfLastShotState,
   bulletDamageState,
+  targetingCapabilityState,
 } from "./bullets";
 import { enemiesState, enemySpawnRateState } from "./enemies";
 import { explosionsState } from "./explosions";
@@ -78,38 +79,41 @@ export const useUpdate = () =>
           (enemy) => distance(towerPosition, enemy.position) <= TOWER_SIZE / 2
         );
 
-        // The closest enemy is the target
-        const closestEnemy = first(
-          sortBy(approachingEnemies, (enemy) =>
-            distance(towerPosition, enemy.position)
-          )
-        );
-
-        // Is the target within range?
+        // The closer enemies are the target(s)
+        const targetingCapacity = get(targetingCapabilityState);
         const targetingRange = get(targetingRangeState);
-        const isEnemyWithinRange = Boolean(
-          closestEnemy &&
-            distance(towerPosition, closestEnemy.position) < targetingRange
+        const targets = take(
+          sortBy(
+            approachingEnemies.filter(
+              (enemy) =>
+                distance(towerPosition, enemy.position) <= targetingRange
+            ),
+            (enemy) => distance(towerPosition, enemy.position)
+          ),
+          targetingCapacity
         );
+
         const shotDelay = 500 / get(rateOfFireState);
-        const canShoot =
-          get(elapsedState) - get(timeOfLastShotState) > shotDelay;
+        const timeSinceLastShot = get(elapsedState) - get(timeOfLastShotState);
+        const canShoot = timeSinceLastShot > shotDelay;
 
-        // Shoot at the closest enemy (if there is one)
-        if (closestEnemy && isEnemyWithinRange && canShoot) {
-          const dx = closestEnemy.position.x - towerPosition.x;
-          const dy = closestEnemy.position.y - towerPosition.y;
-          const angle = Math.atan2(dy, dx);
+        // If there are target(s) and the tower can shoot
+        if (!isEmpty(targets) && canShoot) {
+          targets.forEach((closestEnemy) => {
+            const dx = closestEnemy.position.x - towerPosition.x;
+            const dy = closestEnemy.position.y - towerPosition.y;
+            const angle = Math.atan2(dy, dx);
 
-          set(bulletsState, (bullets) => [
-            ...bullets,
-            {
-              id: `bullet-${Date.now()}`,
-              angle,
-              position: towerPosition,
-              damage: get(bulletDamageState),
-            },
-          ]);
+            set(bulletsState, (bullets) => [
+              ...bullets,
+              {
+                id: `bullet-${uuid4()}`,
+                angle,
+                position: towerPosition,
+                damage: get(bulletDamageState),
+              },
+            ]);
+          });
 
           set(timeOfLastShotState, get(elapsedState));
         }
@@ -161,7 +165,7 @@ export const useUpdate = () =>
           const deadBullets = [];
           const enemyHits = [];
 
-          // TODO: check every bullet against every enemy, updating/destroying as appropriate
+          // Check every bullet against every enemy, updating/destroying as appropriate
           for (const enemy of activeEnemies) {
             for (const bullet of activeBullets) {
               if (

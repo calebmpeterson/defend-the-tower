@@ -24,3 +24,9 @@ export const bulletDamageState = atom<number>({
   key: "bullets/damage",
   default: 10,
 });
+
+// How many bullets can the tower shoot at a time
+export const targetingCapabilityState = atom<number>({
+  key: "targetingCapability",
+  default: 1,
+});
