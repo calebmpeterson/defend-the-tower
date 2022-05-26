@@ -1,6 +1,6 @@
 import { css } from "@emotion/react";
 import { noop } from "lodash";
-import { FC } from "react";
+import { FC, memo } from "react";
 import { useRecoilState } from "recoil";
 import {
   upgradeState,
@@ -81,9 +81,12 @@ const UpgradeButton: FC<Props> = ({ label, value, property, onUpgrade }) => {
     >
       <div css={labelCss}>{label}</div>
       <div css={valueCss}>{value}</div>
-      <div css={costOfUpgradeCss(canUpgrade)}>{costOfUpgrade}</div>
+      <div css={costOfUpgradeCss(canUpgrade)}>
+        <small>$</small>
+        {costOfUpgrade}
+      </div>
     </div>
   );
 };
 
-export default UpgradeButton;
+export default memo(UpgradeButton);

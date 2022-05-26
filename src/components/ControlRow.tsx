@@ -1,5 +1,5 @@
 import { css } from "@emotion/react";
-import { FC, PropsWithChildren } from "react";
+import { FC, memo, PropsWithChildren } from "react";
 
 const layoutCss = css`
   display: flex;
@@ -11,4 +11,4 @@ const ControlRow: FC<PropsWithChildren<{}>> = ({ children }) => (
   <div css={layoutCss}>{children}</div>
 );
 
-export default ControlRow;
+export default memo(ControlRow);

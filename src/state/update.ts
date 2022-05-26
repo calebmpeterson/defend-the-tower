@@ -15,7 +15,7 @@ import {
 import { enemiesState, enemySpawnRateState } from "./enemies";
 import { explosionsState } from "./explosions";
 import { gameState } from "./game";
-import { scoreState } from "./score";
+import { resourcesState, scoreState } from "./score";
 import { screenState } from "./screen";
 import {
   healthState,
@@ -202,6 +202,7 @@ export const useUpdate = () =>
             destroyedEnemies.map((enemy) => enemy.points)
           );
           set(scoreState, (score) => score + pointsToAdd);
+          set(resourcesState, (score) => score + pointsToAdd);
 
           // Create an explosion for each destroyed enemy
           const newExplosions: Explosion[] = destroyedEnemies.map((enemy) => ({

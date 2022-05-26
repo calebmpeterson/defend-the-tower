@@ -1,6 +1,7 @@
 import { css } from "@emotion/react";
 import Controls from "./components/Controls";
 import GameOver from "./components/GameOver";
+import HUD from "./components/HUD";
 import Bullets from "./entities/Bullets";
 import Enemies from "./entities/Enemies";
 import Explosions from "./entities/Explosions";
@@ -47,6 +48,7 @@ function App() {
           <Enemies />
           <Bullets />
           <Explosions />
+          <HUD />
         </div>
         <div css={controlsCss}>
           <Controls />
