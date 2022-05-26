@@ -1,6 +1,6 @@
 import { atom, selector, useRecoilValue } from "recoil";
 import { Position } from "../types";
-import { screenState, useScreen } from "./screen";
+import { screenState } from "./screen";
 
 const DEFAULT_HEALTH = 100;
 export const DEFAULT_TOWER_HEALTH = DEFAULT_HEALTH;
