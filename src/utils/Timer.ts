@@ -1,19 +1,19 @@
 type Subscriber = (now: number) => void;
 
 export default class Timer {
-  subscribers: Subscriber[] = [];
+  subscriber: Subscriber | undefined;
   loopId: number | null = null;
   lastTick: number | undefined;
 
   loop = (time?: number) => {
     if (this.loopId) {
-      this.subscribers.forEach((callback) => {
+      if (this.subscriber) {
         if (time && this.lastTick) {
-          callback(time - this.lastTick);
+          this.subscriber(time - this.lastTick);
         }
 
         this.lastTick = time;
-      });
+      }
     }
 
     this.loopId = requestAnimationFrame(this.loop);
@@ -33,11 +33,12 @@ export default class Timer {
   }
 
   subscribe(callback: Subscriber) {
-    if (this.subscribers.indexOf(callback) === -1)
-      this.subscribers.push(callback);
+    this.subscriber = callback;
   }
 
   unsubscribe(callback: Subscriber) {
-    this.subscribers = this.subscribers.filter((s) => s !== callback);
+    if (this.subscriber === callback) {
+      this.subscriber = undefined;
+    }
   }
 }
