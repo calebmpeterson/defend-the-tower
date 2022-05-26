@@ -1,4 +1,3 @@
-import { css } from "@emotion/react";
 import { FC, memo } from "react";
 import { mdiChessRook } from "@mdi/js";
 import Header from "./Header";

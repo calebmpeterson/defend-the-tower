@@ -3,10 +3,10 @@ import { ChangeEvent, FC, useCallback, memo } from "react";
 import { RecoilState, useRecoilState } from "recoil";
 import { enemySpawnRateState } from "../state/enemies";
 import { mdiAtomVariant } from "@mdi/js";
-import Header from "./controls/Header";
-import OffenseControls from "./controls/OffenseControls";
-import DefenseControls from "./controls/DefenseControls";
-import TitleControls from "./controls/TitleControls";
+import Header from "./Header";
+import OffenseControls from "./OffenseControls";
+import DefenseControls from "./DefenseControls";
+import TitleControls from "./TitleControls";
 
 const layoutCss = css`
   display: flex;

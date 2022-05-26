@@ -1,15 +1,12 @@
 import { FC, memo } from "react";
 import { useRecoilCallback, useRecoilValue } from "recoil";
 import { mdiSwordCross } from "@mdi/js";
-import {
-  bulletDamageState,
-  targetingCapabilityState,
-} from "../../state/bullets";
+import { bulletDamageState, targetingCapabilityState } from "../state/bullets";
 
-import { rateOfFireState, targetingRangeState } from "../../state/tower";
+import { rateOfFireState, targetingRangeState } from "../state/tower";
 import Header from "./Header";
-import ControlRow from "../ControlRow";
-import UpgradeButton from "../UpgradeButton";
+import ControlRow from "./ControlRow";
+import UpgradeButton from "./UpgradeButton";
 
 const OffenseControls: FC = () => {
   const rateOfFire = useRecoilValue(rateOfFireState);

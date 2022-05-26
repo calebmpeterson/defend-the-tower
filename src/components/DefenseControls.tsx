@@ -5,9 +5,9 @@ import {
   maxHealthState,
   regenerationRateState,
   useTowerHealth,
-} from "../../state/tower";
-import ControlRow from "../ControlRow";
-import UpgradeButton from "../UpgradeButton";
+} from "../state/tower";
+import ControlRow from "./ControlRow";
+import UpgradeButton from "./UpgradeButton";
 import Header from "./Header";
 
 const DefenseControls: FC = () => {
