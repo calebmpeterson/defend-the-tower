@@ -7,11 +7,13 @@ const GameLoop: FC<PropsWithChildren<{}>> = ({ children }) => {
   const update = useUpdate();
 
   useEffect(() => {
+    console.warn(`Updated update callback`);
     timer.subscribe(update);
     timer.start();
 
     return () => {
       timer.stop();
+      timer.unsubscribe(update);
     };
   }, [timer, update]);
 

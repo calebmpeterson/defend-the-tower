@@ -1,13 +1,20 @@
+import { v4 as uuid4 } from "uuid";
+
 type Subscriber = (now: number) => void;
 
 export default class Timer {
   subscriber: Subscriber | undefined;
   loopId: number | null = null;
   lastTick: number | undefined;
+  id = uuid4();
 
   loop = (time?: number) => {
     if (this.loopId) {
       if (this.subscriber) {
+        if (this.lastTick === time) {
+          console.warn(`Re-running frame`);
+        }
+
         if (time && this.lastTick) {
           this.subscriber(time - this.lastTick);
         }

@@ -5,6 +5,7 @@ const layoutCss = css`
   display: flex;
   align-items: stretch;
   gap: 10px;
+  margin-bottom: 10px;
 `;
 
 const ControlRow: FC<PropsWithChildren<{}>> = ({ children }) => (
