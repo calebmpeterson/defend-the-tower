@@ -8,8 +8,10 @@ import {
 import { v4 as uuid4 } from "uuid";
 import { BULLET_SIZE, BULLET_SPEED } from "../entities/Bullet";
 import { TOWER_SIZE } from "../entities/Tower";
+import { UpdateFn } from "../systems/types";
 import { Explosion } from "../types";
 import createEnemy from "../utils/createEnemy";
+import { hasKeyDown } from "../utils/Input";
 import { distance } from "../utils/Trigonometry";
 import {
   bulletsState,
@@ -36,7 +38,6 @@ const elapsedState = atom<number>({
 });
 
 export const useElapsed = () => useRecoilValue(elapsedState);
-
 type Updater = (
   transaction: Pick<TransactionInterface_UNSTABLE, "get" | "set">,
   deltaT: number
@@ -210,11 +211,19 @@ const updateGameState: Updater = ({ get, set }) => {
   set(gameState, get(healthState) > 0 ? "running" : "defeat");
 };
 
-export const useUpdate = () =>
+export const useUpdate = (): UpdateFn =>
   useRecoilTransaction_UNSTABLE(
     ({ get, set }) =>
-      (deltaT: number) => {
+      (deltaT: number, { events }) => {
         if (get(gameState) === "defeat") {
+          return;
+        }
+
+        if (hasKeyDown(events, "Escape")) {
+          set(gameState, (s) => (s === "running" ? "paused" : "running"));
+        }
+
+        if (get(gameState) === "paused") {
           return;
         }
 

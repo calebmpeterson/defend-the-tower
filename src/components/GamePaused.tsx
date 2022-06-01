@@ -1,6 +1,7 @@
 import { css } from "@emotion/react";
 import { FC } from "react";
-import { useReset } from "../state/reset";
+import { useRecoilCallback } from "recoil";
+import { gameState } from "../state/game";
 import { useScore } from "../state/score";
 import { transition } from "../styles/Animation";
 import ScreenOverlay from "./ScreenOverlay";
@@ -21,22 +22,28 @@ const buttonCss = css`
   }
 `;
 
-const GameOver: FC = () => {
+const GamePaused: FC = () => {
   const score = useScore();
 
-  const onReset = useReset();
+  const onResume = useRecoilCallback(
+    ({ set }) =>
+      () => {
+        set(gameState, "running");
+      },
+    []
+  );
 
   return (
     <ScreenOverlay>
-      <div>Game Over</div>
-      <h1>Final score {score}</h1>
+      <div>Game Paused</div>
+      <h1>Score {score}</h1>
       <div>
-        <button css={buttonCss} onClick={onReset}>
-          Play again
+        <button css={buttonCss} onClick={onResume}>
+          Resume
         </button>
       </div>
     </ScreenOverlay>
   );
 };
 
-export default GameOver;
+export default GamePaused;

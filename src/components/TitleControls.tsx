@@ -6,6 +6,9 @@ const TitleControls: FC = () => {
   return (
     <div>
       <Header iconPath={mdiChessRook}>Defend the Tower</Header>
+      <div style={{ textAlign: "center" }}>
+        <small>Press ESCAPE to pause</small>
+      </div>
     </div>
   );
 };

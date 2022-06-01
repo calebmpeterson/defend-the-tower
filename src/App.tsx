@@ -1,6 +1,7 @@
 import { css } from "@emotion/react";
 import Controls from "./components/Controls";
 import GameOver from "./components/GameOver";
+import GamePaused from "./components/GamePaused";
 import HUD from "./components/HUD";
 import Bullets from "./entities/Bullets";
 import Enemies from "./entities/Enemies";
@@ -55,6 +56,7 @@ function App() {
         </div>
       </div>
       {state === "defeat" && <GameOver />}
+      {state === "paused" && <GamePaused />}
     </GameLoop>
   );
 }
