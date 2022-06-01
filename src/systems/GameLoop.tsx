@@ -17,6 +17,7 @@ const inputOverlayCss = css`
   right: 0;
   bottom: 0;
   left: 0;
+  pointer-events: none;
 `;
 
 const GameLoop: FC<PropsWithChildren<{}>> = ({ children }) => {
