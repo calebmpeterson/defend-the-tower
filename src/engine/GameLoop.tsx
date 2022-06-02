@@ -6,9 +6,9 @@ import {
   useMemo,
   useRef,
 } from "react";
-import { useUpdate } from "../state/update";
+import { useUpdate } from "../systems/update";
 import Timer from "../utils/Timer";
-import useInputHandlers from "./useInputHandlers";
+import { useInputHandlers } from "../input";
 
 const GameLoop: FC<PropsWithChildren<{}>> = ({ children }) => {
   const container = useRef<HTMLDivElement>(null);
@@ -19,8 +19,11 @@ const GameLoop: FC<PropsWithChildren<{}>> = ({ children }) => {
   const onTick = useCallback(
     (deltaT: number) => {
       update(deltaT, { events: input.events.current });
+
+      // Clear events for the next event loop pass
       input.events.current = [];
 
+      // Ensure input focus
       if (document.activeElement === document.body && container.current) {
         container.current.focus();
       }

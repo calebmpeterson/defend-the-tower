@@ -10,7 +10,7 @@ import TargetingRangeIndicator from "./entities/TargetingRangeIndicator";
 import Tower from "./entities/Tower";
 import { useGameState } from "./state/game";
 import { useScreenRef } from "./state/screen";
-import GameLoop from "./systems/GameLoop";
+import { GameLoop } from "./engine";
 
 const layoutCss = css`
   display: flex;

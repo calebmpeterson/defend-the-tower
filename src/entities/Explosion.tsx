@@ -1,6 +1,6 @@
 import { css } from "@emotion/react";
 import { FC } from "react";
-import { useElapsed } from "../state/update";
+import { useElapsed } from "../systems/update";
 import type { Explosion as ExplosionProps } from "../types";
 import { position } from "../utils/Geometry";
 

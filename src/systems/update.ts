@@ -8,29 +8,29 @@ import {
 import { v4 as uuid4 } from "uuid";
 import { BULLET_SIZE, BULLET_SPEED } from "../entities/Bullet";
 import { TOWER_SIZE } from "../entities/Tower";
-import { UpdateFn } from "../systems/types";
+import { UpdateFn } from "../engine";
+import { hasKeyDown } from "../input";
 import { Explosion } from "../types";
 import createEnemy from "../utils/createEnemy";
-import { hasKeyDown } from "../utils/Input";
 import { distance } from "../utils/Trigonometry";
 import {
   bulletsState,
   timeOfLastShotState,
   bulletDamageState,
   targetingCapabilityState,
-} from "./bullets";
-import { enemiesState, enemySpawnRateState } from "./enemies";
-import { explosionsState } from "./explosions";
-import { gameState } from "./game";
-import { resourcesState, scoreState } from "./score";
-import { screenState } from "./screen";
+} from "../state/bullets";
+import { enemiesState, enemySpawnRateState } from "../state/enemies";
+import { explosionsState } from "../state/explosions";
+import { gameState } from "../state/game";
+import { resourcesState, scoreState } from "../state/score";
+import { screenState } from "../state/screen";
 import {
   healthState,
   maxHealthState,
   rateOfFireState,
   regenerationRateState,
   targetingRangeState,
-} from "./tower";
+} from "../state/tower";
 
 const elapsedState = atom<number>({
   key: "clock/elapsed",
