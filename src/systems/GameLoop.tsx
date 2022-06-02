@@ -1,4 +1,3 @@
-import { css } from "@emotion/react";
 import {
   FC,
   PropsWithChildren,
@@ -10,15 +9,6 @@ import {
 import { useUpdate } from "../state/update";
 import Timer from "../utils/Timer";
 import useInputHandlers from "./useInputHandlers";
-
-const inputOverlayCss = css`
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  pointer-events: none;
-`;
 
 const GameLoop: FC<PropsWithChildren<{}>> = ({ children }) => {
   const container = useRef<HTMLDivElement>(null);
@@ -55,14 +45,8 @@ const GameLoop: FC<PropsWithChildren<{}>> = ({ children }) => {
   }, [timer, onTick]);
 
   return (
-    <div>
+    <div ref={container} tabIndex={0} {...input.handlers}>
       {children ?? null}
-      <div
-        ref={container}
-        tabIndex={0}
-        css={inputOverlayCss}
-        {...input.handlers}
-      />
     </div>
   );
 };
