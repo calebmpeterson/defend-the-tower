@@ -7,6 +7,7 @@ import Header from "./Header";
 import OffenseControls from "./OffenseControls";
 import DefenseControls from "./DefenseControls";
 import TitleControls from "./TitleControls";
+import FooterControls from "./FooterControls";
 
 const layoutCss = css`
   display: flex;
@@ -92,6 +93,8 @@ const Controls = () => {
       <DefenseControls />
 
       <OffenseControls />
+
+      <FooterControls />
     </div>
   );
 };

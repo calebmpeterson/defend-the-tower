@@ -19,6 +19,13 @@ const layoutCss = css`
   background: #222;
   color: #fff;
   font-family: monospace;
+
+  a {
+    color: #fff;
+  }
+  a:visited {
+    color: #fff;
+  }
 `;
 
 const overlayCss = (state: string) =>
