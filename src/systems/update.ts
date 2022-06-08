@@ -43,7 +43,33 @@ type Updater = (
   deltaT: number
 ) => void;
 
-const spawnEnemy: Updater = ({ get, set }, deltaT) => {
+const updateGameTimer: Updater = ({ set }, deltaT) => {
+  set(elapsedState, (t) => t + deltaT);
+};
+
+const updateEnemies: Updater = ({ get, set }, deltaT) => {
+  const screen = get(screenState);
+
+  const enemies = get(enemiesState);
+
+  // Update all enemies
+  const updatedEnemies = enemies.map((enemy) => {
+    const dy = screen.height / 2 - enemy.position.y;
+    const dx = screen.width / 2 - enemy.position.x;
+    const angle = Math.atan2(dy, dx);
+
+    return {
+      ...enemy,
+      position: {
+        x: enemy.position.x + (enemy.speed * deltaT * Math.cos(angle)) / 1000,
+        y: enemy.position.y + (enemy.speed * deltaT * Math.sin(angle)) / 1000,
+      },
+    };
+  });
+  set(enemiesState, updatedEnemies);
+};
+
+const spawnEnemy: Updater = ({ get, set }) => {
   if (
     Math.random() <
     (get(enemySpawnRateState) + get(elapsedState) / 100000) / 100
@@ -63,7 +89,7 @@ const spawnEnemy: Updater = ({ get, set }, deltaT) => {
   }
 };
 
-const shootBullets: Updater = ({ get, set }, deltaT) => {
+const shootBullets: Updater = ({ get, set }) => {
   const screen = get(screenState);
 
   const towerPosition = {
@@ -140,7 +166,29 @@ const updateBullets: Updater = ({ get, set }, deltaT) => {
   set(bulletsState, onScreenBullets);
 };
 
-const detectCollisions: Updater = ({ get, set }) => {
+const detectTowerCollisions: Updater = ({ get, set }) => {
+  const screen = get(screenState);
+
+  const towerPosition = {
+    x: screen.width / 2,
+    y: screen.height / 2,
+  };
+
+  const approachingEnemies = get(enemiesState).filter(
+    (enemy) => distance(towerPosition, enemy.position) > TOWER_SIZE / 2
+  );
+
+  const collidedEnemies = get(enemiesState).filter(
+    (enemy) => distance(towerPosition, enemy.position) <= TOWER_SIZE / 2
+  );
+
+  set(enemiesState, approachingEnemies);
+
+  const totalDamage = sum(collidedEnemies.map((enemy) => enemy.health));
+  set(healthState, (h) => Math.max((h -= totalDamage), 0));
+};
+
+const detectBulletCollisions: Updater = ({ get, set }) => {
   const activeEnemies = get(enemiesState);
   const activeBullets = get(bulletsState);
   const deadBullets = [];
@@ -227,64 +275,22 @@ export const useUpdate = (): UpdateFn =>
           return;
         }
 
-        const screen = get(screenState);
+        updateGameTimer({ get, set }, deltaT);
 
-        const towerPosition = {
-          x: screen.width / 2,
-          y: screen.height / 2,
-        };
-
-        set(elapsedState, (t) => t + deltaT);
-
-        // Update the tower's health
         regenerateTowerHealth({ get, set }, deltaT);
 
-        const enemies = get(enemiesState);
+        updateEnemies({ get, set }, deltaT);
 
-        // Update all enemies
-        const updatedEnemies = enemies.map((enemy) => {
-          const dy = screen.height / 2 - enemy.position.y;
-          const dx = screen.width / 2 - enemy.position.x;
-          const angle = Math.atan2(dy, dx);
+        detectTowerCollisions({ get, set }, deltaT);
 
-          return {
-            ...enemy,
-            position: {
-              x:
-                enemy.position.x +
-                (enemy.speed * deltaT * Math.cos(angle)) / 1000,
-              y:
-                enemy.position.y +
-                (enemy.speed * deltaT * Math.sin(angle)) / 1000,
-            },
-          };
-        });
-
-        const approachingEnemies = updatedEnemies.filter(
-          (enemy) => distance(towerPosition, enemy.position) > TOWER_SIZE / 2
-        );
-        set(enemiesState, approachingEnemies);
-
-        const collidedEnemies = updatedEnemies.filter(
-          (enemy) => distance(towerPosition, enemy.position) <= TOWER_SIZE / 2
-        );
-
-        const totalDamage = sum(collidedEnemies.map((enemy) => enemy.health));
-        set(healthState, (h) => Math.max((h -= totalDamage), 0));
-
-        // Maybe spawn a new enemy
         spawnEnemy({ get, set }, deltaT);
 
-        // Maybe shoot at the enemy
         shootBullets({ get, set }, deltaT);
 
-        // Update all the bullets
         updateBullets({ get, set }, deltaT);
 
-        // Collision detect bullets and enemies
-        detectCollisions({ get, set }, deltaT);
+        detectBulletCollisions({ get, set }, deltaT);
 
-        // Update the game state
         updateGameState({ get, set }, deltaT);
       },
     []
