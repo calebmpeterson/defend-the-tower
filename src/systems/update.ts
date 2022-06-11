@@ -1,10 +1,15 @@
-import { groupBy, isEmpty, map, sortBy, sum, take, without } from "lodash";
 import {
-  atom,
-  TransactionInterface_UNSTABLE,
-  useRecoilTransaction_UNSTABLE,
-  useRecoilValue,
-} from "recoil";
+  groupBy,
+  isEmpty,
+  map,
+  sortBy,
+  sum,
+  take,
+  without,
+  get as _get,
+  uniq,
+} from "lodash";
+import { atom, useRecoilTransaction_UNSTABLE, useRecoilValue } from "recoil";
 import { v4 as uuid4 } from "uuid";
 import { BULLET_SIZE, BULLET_SPEED } from "../entities/Bullet";
 import { TOWER_SIZE } from "../entities/Tower";
@@ -31,6 +36,8 @@ import {
   regenerationRateState,
   targetingRangeState,
 } from "../state/tower";
+import { activeKeysState, keyState } from "../input";
+import { Updater } from "./types";
 
 const elapsedState = atom<number>({
   key: "clock/elapsed",
@@ -38,10 +45,6 @@ const elapsedState = atom<number>({
 });
 
 export const useElapsed = () => useRecoilValue(elapsedState);
-type Updater = (
-  transaction: Pick<TransactionInterface_UNSTABLE, "get" | "set">,
-  deltaT: number
-) => void;
 
 const updateGameTimer: Updater = ({ set }, deltaT) => {
   set(elapsedState, (t) => t + deltaT);
@@ -259,15 +262,31 @@ const updateGameState: Updater = ({ get, set }) => {
   set(gameState, get(healthState) > 0 ? "running" : "defeat");
 };
 
+const updateKeyboardState: Updater = ({ set }, _deltaT, { events }) => {
+  events.forEach((event) => {
+    const key = _get(event, "payload.key");
+
+    if (event.name === "onKeyDown") {
+      set(keyState(key), "down");
+      set(activeKeysState, (downs) => uniq([...downs, key]));
+    } else if (event.name === "onKeyUp") {
+      set(keyState(key), "up");
+      set(activeKeysState, (downs) => downs.filter((k) => k !== key));
+    }
+  });
+};
+
 export const useUpdate = (): UpdateFn =>
   useRecoilTransaction_UNSTABLE(
     ({ get, set }) =>
-      (deltaT: number, { events }) => {
+      (deltaT: number, update) => {
+        updateKeyboardState({ get, set }, deltaT, update);
+
         if (get(gameState) === "defeat") {
           return;
         }
 
-        if (hasKeyDown(events, "Escape")) {
+        if (hasKeyDown(update.events, "Escape")) {
           set(gameState, (s) => (s === "running" ? "paused" : "running"));
         }
 
@@ -275,23 +294,23 @@ export const useUpdate = (): UpdateFn =>
           return;
         }
 
-        updateGameTimer({ get, set }, deltaT);
+        updateGameTimer({ get, set }, deltaT, update);
 
-        regenerateTowerHealth({ get, set }, deltaT);
+        regenerateTowerHealth({ get, set }, deltaT, update);
 
-        updateEnemies({ get, set }, deltaT);
+        updateEnemies({ get, set }, deltaT, update);
 
-        detectTowerCollisions({ get, set }, deltaT);
+        detectTowerCollisions({ get, set }, deltaT, update);
 
-        spawnEnemy({ get, set }, deltaT);
+        spawnEnemy({ get, set }, deltaT, update);
 
-        shootBullets({ get, set }, deltaT);
+        shootBullets({ get, set }, deltaT, update);
 
-        updateBullets({ get, set }, deltaT);
+        updateBullets({ get, set }, deltaT, update);
 
-        detectBulletCollisions({ get, set }, deltaT);
+        detectBulletCollisions({ get, set }, deltaT, update);
 
-        updateGameState({ get, set }, deltaT);
+        updateGameState({ get, set }, deltaT, update);
       },
     []
   );

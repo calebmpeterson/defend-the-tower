@@ -12,6 +12,9 @@ const useInputHandlers = () => {
         name,
         handler: (payload: SyntheticEvent) => {
           payload.persist();
+          if (name.includes("Key")) {
+            payload.preventDefault();
+          }
           events.current.push({ name, payload });
         },
       }))

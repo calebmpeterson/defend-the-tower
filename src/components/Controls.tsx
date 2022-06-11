@@ -3,6 +3,7 @@ import OffenseControls from "./OffenseControls";
 import DefenseControls from "./DefenseControls";
 import TitleControls from "./TitleControls";
 import FooterControls from "./FooterControls";
+import KeyboardEvents from "./KeyboardEvents";
 
 const layoutCss = css`
   display: flex;
@@ -21,6 +22,7 @@ const Controls = () => {
       <TitleControls />
       <DefenseControls />
       <OffenseControls />
+      <KeyboardEvents />
       <FooterControls />
     </div>
   );
