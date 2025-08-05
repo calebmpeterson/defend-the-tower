@@ -4,6 +4,7 @@ import {
   TransactionInterface_UNSTABLE,
   useRecoilValue,
 } from "recoil";
+import { Position } from "../types";
 
 export type KeyState = "up" | "down";
 
@@ -23,3 +24,10 @@ export const isKeyActive = (
   get: TransactionInterface_UNSTABLE["get"],
   ...keys: string[]
 ) => keys.some((key) => get(activeKeysState).includes(key));
+
+export const pointerPositionState = atom<Position>({
+  key: "input/pointer",
+  default: { x: 0, y: 0 },
+});
+
+export const usePointerPosition = () => useRecoilValue(pointerPositionState);

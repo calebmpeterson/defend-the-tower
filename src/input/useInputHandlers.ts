@@ -1,7 +1,7 @@
-import { useMemo, useRef, SyntheticEvent } from "react";
+import { SyntheticEvent, useMemo, useRef } from "react";
 import { Handlers, InputEvents } from "./types";
 
-const EVENTS = `onClick onContextMenu onDoubleClick onDrag onDragEnd onDragEnter onDragExit onDragLeave onDragOver onDragStart onDrop onMouseDown onMouseEnter onMouseLeave onMouseMove onMouseOut onMouseOver onMouseUp onWheel onTouchCancel onTouchEnd onTouchMove onTouchStart onKeyDown onKeyPress onKeyUp`;
+const EVENTS = `onClick onContextMenu onDoubleClick onDrag onDragEnd onDragEnter onDragExit onDragLeave onDragOver onDragStart onDrop onMouseDown onMouseEnter onMouseLeave onMouseMove onMouseOut onMouseOver onMouseUp onWheel onPointerMove onTouchCancel onTouchEnd onTouchMove onTouchStart onKeyDown onKeyPress onKeyUp`;
 
 const useInputHandlers = () => {
   const events = useRef<InputEvents>([]);
@@ -10,7 +10,7 @@ const useInputHandlers = () => {
     const inputHandlers = EVENTS.split(" ")
       .map((name) => ({
         name,
-        handler: (payload: SyntheticEvent) => {
+        handler: (payload: SyntheticEvent<HTMLDivElement>) => {
           payload.persist();
           if (name.includes("Key")) {
             payload.preventDefault();

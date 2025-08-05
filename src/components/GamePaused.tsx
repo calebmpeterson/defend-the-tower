@@ -4,7 +4,7 @@ import { useRecoilCallback } from "recoil";
 import { gameState } from "../state/game";
 import { useScore } from "../state/score";
 import { transition } from "../styles/Animation";
-import ScreenOverlay from "./ScreenOverlay";
+import Overlay from "./Overlay";
 
 const buttonCss = css`
   background-color: transparent;
@@ -34,7 +34,7 @@ const GamePaused: FC = () => {
   );
 
   return (
-    <ScreenOverlay>
+    <Overlay>
       <div>Game Paused</div>
       <h1>Score {score}</h1>
       <div>
@@ -42,7 +42,7 @@ const GamePaused: FC = () => {
           Resume
         </button>
       </div>
-    </ScreenOverlay>
+    </Overlay>
   );
 };
 

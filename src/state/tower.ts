@@ -1,8 +1,9 @@
-import { atom, selector, useRecoilValue } from "recoil";
+import { useEffect } from "react";
+import { atom, useRecoilValue, useSetRecoilState } from "recoil";
 import { Position } from "../types";
-import { screenState } from "./screen";
 
 const DEFAULT_HEALTH = 100;
+const DEFAULT_SPEED = 100;
 export const DEFAULT_TOWER_HEALTH = DEFAULT_HEALTH;
 
 export const healthState = atom<number>({
@@ -12,18 +13,19 @@ export const healthState = atom<number>({
 
 export const useTowerHealth = () => useRecoilValue(healthState);
 
-export const towerPositionState = selector<Position>({
+export const towerPositionState = atom<Position>({
   key: "towerPosition",
-  get: ({ get }) => {
-    const screen = get(screenState);
-    const x = screen.width / 2;
-    const y = screen.height / 2;
-
-    return { x, y };
-  },
+  default: { x: 1, y: 1 },
 });
 
 export const useTowerPosition = () => useRecoilValue(towerPositionState);
+
+export const towerSpeedState = atom<number>({
+  key: "towerSpeed",
+  default: DEFAULT_SPEED,
+});
+
+export const useTowerSpeed = () => useRecoilValue(towerSpeedState);
 
 export const regenerationRateState = atom<number>({
   key: "tower/regenerationRate",
@@ -46,3 +48,16 @@ export const targetingRangeState = atom<number>({
 });
 
 export const useTargetingRange = () => useRecoilValue(targetingRangeState);
+
+export const useInitializeTower = (sceneElement: HTMLDivElement | null) => {
+  const setTowerPosition = useSetRecoilState(towerPositionState);
+
+  useEffect(() => {
+    if (sceneElement) {
+      const x = sceneElement.clientWidth / 2;
+      const y = sceneElement.clientHeight / 2;
+
+      setTowerPosition({ x, y });
+    }
+  }, [setTowerPosition, sceneElement]);
+};

@@ -9,6 +9,7 @@ const containerCss = css`
   width: 100%;
   box-sizing: border-box;
   padding: 10px;
+  pointer-events: none;
 `;
 
 const HUD: FC = () => {

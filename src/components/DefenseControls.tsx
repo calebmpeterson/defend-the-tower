@@ -4,11 +4,12 @@ import { useRecoilCallback, useRecoilValue } from "recoil";
 import {
   maxHealthState,
   regenerationRateState,
+  towerSpeedState,
   useTowerHealth,
 } from "../state/tower";
 import ControlRow from "./ControlRow";
-import UpgradeButton from "./UpgradeButton";
 import Header from "./Header";
+import UpgradeButton from "./UpgradeButton";
 
 const DefenseControls: FC = () => {
   const health = useTowerHealth();
@@ -31,6 +32,15 @@ const DefenseControls: FC = () => {
     []
   );
 
+  const towerSpeed = useRecoilValue(towerSpeedState);
+  const onUpgradeTowerSpeed = useRecoilCallback(
+    ({ set }) =>
+      () => {
+        set(towerSpeedState, (r) => r + 1);
+      },
+    []
+  );
+
   return (
     <div>
       <Header iconPath={mdiShield}>Defense</Header>
@@ -43,9 +53,15 @@ const DefenseControls: FC = () => {
         />
         <UpgradeButton
           property="regeneration-rate"
-          label="Health regeneration"
+          label="Healing"
           value={regenerationRate.toFixed(2)}
           onUpgrade={onUpgradeRegenerationRate}
+        />
+        <UpgradeButton
+          property="tower-speed"
+          label="Speed"
+          value={towerSpeed.toFixed(2)}
+          onUpgrade={onUpgradeTowerSpeed}
         />
       </ControlRow>
     </div>

@@ -2,10 +2,10 @@ import { SyntheticEvent } from "react";
 
 export type InputEvent = {
   name: string;
-  payload: SyntheticEvent;
+  payload: SyntheticEvent<HTMLDivElement>;
 };
 
 export type InputEvents = InputEvent[];
 
-export type Handler = (event: SyntheticEvent) => void;
+export type Handler = (event: SyntheticEvent<HTMLDivElement>) => void;
 export type Handlers = Record<string, Handler>;

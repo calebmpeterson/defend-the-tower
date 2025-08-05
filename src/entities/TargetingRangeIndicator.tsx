@@ -1,7 +1,6 @@
 import { css } from "@emotion/react";
 import { FC } from "react";
-import { useScreen } from "../state/screen";
-import { useTargetingRange } from "../state/tower";
+import { useTargetingRange, useTowerPosition } from "../state/tower";
 import { position } from "../utils/Geometry";
 
 const towerCss = (size: number) => css`
@@ -14,11 +13,9 @@ const towerCss = (size: number) => css`
 `;
 
 const TargetingRangeIndicator: FC = () => {
-  const screen = useScreen();
+  const { x, y } = useTowerPosition();
   const targetingRange = useTargetingRange();
   const size = targetingRange * 2;
-  const x = screen.width / 2;
-  const y = screen.height / 2;
   return <div css={towerCss(size)} style={position(x, y, size)} />;
 };
 

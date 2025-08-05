@@ -1,9 +1,10 @@
 import { css } from "@emotion/react";
-import OffenseControls from "./OffenseControls";
 import DefenseControls from "./DefenseControls";
-import TitleControls from "./TitleControls";
+import DevTools from "./DevTools";
 import FooterControls from "./FooterControls";
 import KeyboardEvents from "./KeyboardEvents";
+import OffenseControls from "./OffenseControls";
+import TitleControls from "./TitleControls";
 
 const layoutCss = css`
   display: flex;
@@ -23,6 +24,7 @@ const Controls = () => {
       <DefenseControls />
       <OffenseControls />
       <KeyboardEvents />
+      <DevTools />
       <FooterControls />
     </div>
   );

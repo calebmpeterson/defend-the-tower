@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { atom, useRecoilValue, useSetRecoilState } from "recoil";
 import { Size } from "../types";
 
@@ -7,9 +7,7 @@ export const screenState = atom<Size>({
   default: { width: 1, height: 1 },
 });
 
-export const useScreenRef = () => {
-  const [sceneElement, setRef] = useState<HTMLDivElement | null>(null);
-
+export const useInitializeScreen = (sceneElement: HTMLDivElement | null) => {
   const setSize = useSetRecoilState(screenState);
 
   useEffect(() => {
@@ -31,8 +29,6 @@ export const useScreenRef = () => {
       };
     }
   }, [setSize, sceneElement]);
-
-  return setRef;
 };
 
 export const useScreen = () => useRecoilValue(screenState);

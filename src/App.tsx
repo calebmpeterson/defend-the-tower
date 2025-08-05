@@ -1,16 +1,18 @@
 import { css } from "@emotion/react";
+import { useState } from "react";
 import Controls from "./components/Controls";
 import GameOver from "./components/GameOver";
 import GamePaused from "./components/GamePaused";
 import HUD from "./components/HUD";
+import { GameLoop } from "./engine";
 import Bullets from "./entities/Bullets";
 import Enemies from "./entities/Enemies";
 import Explosions from "./entities/Explosions";
 import TargetingRangeIndicator from "./entities/TargetingRangeIndicator";
 import Tower from "./entities/Tower";
 import { useGameState } from "./state/game";
-import { useScreenRef } from "./state/screen";
-import { GameLoop } from "./engine";
+import { useInitializeScreen } from "./state/screen";
+import { useInitializeTower } from "./state/tower";
 
 const layoutCss = css`
   display: flex;
@@ -35,18 +37,23 @@ const overlayCss = (state: string) =>
   `;
 
 const sceneCss = css`
-  width: 66%;
+  width: 70%;
   position: relative;
   overflow: hidden;
 `;
 
 const controlsCss = css`
-  width: 34%;
+  width: 30%;
 `;
 
 function App() {
+  const [sceneElement, setScreenRef] = useState<HTMLDivElement | null>(null);
+
+  useInitializeScreen(sceneElement);
+  useInitializeTower(sceneElement);
+
   const state = useGameState();
-  const setScreenRef = useScreenRef();
+
   return (
     <GameLoop>
       <div css={[layoutCss, overlayCss(state)]}>
@@ -57,13 +64,13 @@ function App() {
           <Bullets />
           <Explosions />
           <HUD />
+          {state === "paused" && <GamePaused />}
         </div>
         <div css={controlsCss}>
           <Controls />
         </div>
       </div>
       {state === "defeat" && <GameOver />}
-      {state === "paused" && <GamePaused />}
     </GameLoop>
   );
 }

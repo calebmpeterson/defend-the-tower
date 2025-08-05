@@ -12,5 +12,5 @@ export const useEnemiesCount = () => useRecoilValue(enemiesState).length;
 
 export const enemySpawnRateState = atom<number>({
   key: "enemies/spawnRate",
-  default: 1,
+  default: 1.5,
 });

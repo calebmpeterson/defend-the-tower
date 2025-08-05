@@ -3,7 +3,7 @@ import { FC } from "react";
 import { useTowerPosition } from "../state/tower";
 import { position } from "../utils/Geometry";
 
-const SIZE = 20;
+const SIZE = 6;
 
 export const TOWER_SIZE = SIZE;
 
@@ -13,6 +13,7 @@ const towerCss = css`
   height: ${SIZE}px;
   border: 2px solid #fff;
   border-radius: ${SIZE}px;
+  box-sizing: border-box;
 `;
 
 const Tower: FC = () => {

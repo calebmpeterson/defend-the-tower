@@ -1,28 +1,30 @@
 import {
+  get as _get,
   groupBy,
   isEmpty,
   map,
   sortBy,
   sum,
   take,
-  without,
-  get as _get,
   uniq,
+  without,
 } from "lodash";
 import { atom, useRecoilTransaction_UNSTABLE, useRecoilValue } from "recoil";
 import { v4 as uuid4 } from "uuid";
+import { UpdateFn } from "../engine";
 import { BULLET_SIZE, BULLET_SPEED } from "../entities/Bullet";
 import { TOWER_SIZE } from "../entities/Tower";
-import { UpdateFn } from "../engine";
-import { hasKeyDown } from "../input";
-import { Explosion } from "../types";
-import createEnemy from "../utils/createEnemy";
-import { distance } from "../utils/Trigonometry";
 import {
-  bulletsState,
-  timeOfLastShotState,
+  activeKeysState,
+  hasKeyDown,
+  keyState,
+  pointerPositionState,
+} from "../input";
+import {
   bulletDamageState,
+  bulletsState,
   targetingCapabilityState,
+  timeOfLastShotState,
 } from "../state/bullets";
 import { enemiesState, enemySpawnRateState } from "../state/enemies";
 import { explosionsState } from "../state/explosions";
@@ -35,8 +37,12 @@ import {
   rateOfFireState,
   regenerationRateState,
   targetingRangeState,
+  towerPositionState,
+  towerSpeedState,
 } from "../state/tower";
-import { activeKeysState, keyState } from "../input";
+import { Explosion } from "../types";
+import createEnemy from "../utils/createEnemy";
+import { distance } from "../utils/Trigonometry";
 import { Updater } from "./types";
 
 const elapsedState = atom<number>({
@@ -51,14 +57,14 @@ const updateGameTimer: Updater = ({ set }, deltaT) => {
 };
 
 const updateEnemies: Updater = ({ get, set }, deltaT) => {
-  const screen = get(screenState);
+  const towerPosition = get(towerPositionState);
 
   const enemies = get(enemiesState);
 
   // Update all enemies
   const updatedEnemies = enemies.map((enemy) => {
-    const dy = screen.height / 2 - enemy.position.y;
-    const dx = screen.width / 2 - enemy.position.x;
+    const dy = towerPosition.y - enemy.position.y;
+    const dx = towerPosition.x - enemy.position.x;
     const angle = Math.atan2(dy, dx);
 
     return {
@@ -93,12 +99,7 @@ const spawnEnemy: Updater = ({ get, set }) => {
 };
 
 const shootBullets: Updater = ({ get, set }) => {
-  const screen = get(screenState);
-
-  const towerPosition = {
-    x: screen.width / 2,
-    y: screen.height / 2,
-  };
+  const towerPosition = get(towerPositionState);
 
   // The closer enemies are the target(s)
   const targetingCapacity = get(targetingCapabilityState);
@@ -170,12 +171,7 @@ const updateBullets: Updater = ({ get, set }, deltaT) => {
 };
 
 const detectTowerCollisions: Updater = ({ get, set }) => {
-  const screen = get(screenState);
-
-  const towerPosition = {
-    x: screen.width / 2,
-    y: screen.height / 2,
-  };
+  const towerPosition = get(towerPositionState);
 
   const approachingEnemies = get(enemiesState).filter(
     (enemy) => distance(towerPosition, enemy.position) > TOWER_SIZE / 2
@@ -235,6 +231,7 @@ const detectBulletCollisions: Updater = ({ get, set }) => {
     position: enemy.position,
     color: enemy.color,
   }));
+
   set(explosionsState, (explosions) => [...explosions, ...newExplosions]);
 
   // Remove any "expired" explosions
@@ -276,11 +273,52 @@ const updateKeyboardState: Updater = ({ set }, _deltaT, { events }) => {
   });
 };
 
+const updatePointerState: Updater = ({ set }, _deltaT, { events }) => {
+  events.forEach((event) => {
+    if (
+      event.name === "onPointerMove" &&
+      "clientX" in event.payload &&
+      "clientY" in event.payload
+    ) {
+      set(pointerPositionState, {
+        // @ts-ignore-error
+        x: event.payload.clientX as number,
+        // @ts-ignore-error
+        y: event.payload.clientY as number,
+      });
+    }
+  });
+};
+
+const updateTowerPosition: Updater = ({ get, set }, deltaT) => {
+  const pointerPosition = get(pointerPositionState);
+  const towerPosition = get(towerPositionState);
+
+  // Don't move if already very close
+  if (distance(pointerPosition, towerPosition) < TOWER_SIZE) {
+    return;
+  }
+
+  const dy = towerPosition.y - pointerPosition.y;
+  const dx = towerPosition.x - pointerPosition.x;
+  const angle = Math.atan2(dy, dx);
+
+  const towerSpeed = get(towerSpeedState);
+
+  const newPosition = {
+    x: towerPosition.x - (towerSpeed * deltaT * Math.cos(angle)) / 1000,
+    y: towerPosition.y - (towerSpeed * deltaT * Math.sin(angle)) / 1000,
+  };
+
+  set(towerPositionState, newPosition);
+};
+
 export const useUpdate = (): UpdateFn =>
   useRecoilTransaction_UNSTABLE(
     ({ get, set }) =>
       (deltaT: number, update) => {
         updateKeyboardState({ get, set }, deltaT, update);
+        updatePointerState({ get, set }, deltaT, update);
 
         if (get(gameState) === "defeat") {
           return;
@@ -296,6 +334,7 @@ export const useUpdate = (): UpdateFn =>
 
         updateGameTimer({ get, set }, deltaT, update);
 
+        updateTowerPosition({ get, set }, deltaT, update);
         regenerateTowerHealth({ get, set }, deltaT, update);
 
         updateEnemies({ get, set }, deltaT, update);
