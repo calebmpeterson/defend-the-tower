@@ -12,12 +12,12 @@ const headerCss = css`
 `;
 
 interface HeaderProps {
-  iconPath: string;
+  iconPath?: string;
 }
 
 const Header: FC<PropsWithChildren<HeaderProps>> = ({ children, iconPath }) => (
   <h3 css={headerCss}>
-    <Icon color="currentColor" path={iconPath} size={0.7} />
+    {iconPath && <Icon color="currentColor" path={iconPath} size={0.7} />}
     {children}
   </h3>
 );

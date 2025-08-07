@@ -4,6 +4,7 @@ import { useReset } from "../state/reset";
 import { useScore } from "../state/score";
 import { transition } from "../styles/Animation";
 import ScreenOverlay from "./ScreenOverlay";
+import TitleControls from "./TitleControls";
 
 const buttonCss = css`
   background-color: transparent;
@@ -28,6 +29,7 @@ const GameOver: FC = () => {
 
   return (
     <ScreenOverlay>
+      <TitleControls />
       <div>Game Over</div>
       <h1>Final score {score}</h1>
       <div>

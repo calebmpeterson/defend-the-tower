@@ -2,11 +2,10 @@ import { css } from "@emotion/react";
 import { FC } from "react";
 import { useRecoilCallback } from "recoil";
 import { gameState } from "../state/game";
-import { useScore } from "../state/score";
+import { useResources } from "../state/score";
 import { transition } from "../styles/Animation";
-import FooterControls from "./FooterControls";
-import Overlay from "./Overlay";
-import TitleControls from "./TitleControls";
+import Controls from "./Controls";
+import ScreenOverlay from "./ScreenOverlay";
 
 const buttonCss = css`
   background-color: transparent;
@@ -24,9 +23,7 @@ const buttonCss = css`
   }
 `;
 
-const GamePaused: FC = () => {
-  const score = useScore();
-
+const UpgradeSelection: FC = () => {
   const onResume = useRecoilCallback(
     ({ set }) =>
       () => {
@@ -35,19 +32,23 @@ const GamePaused: FC = () => {
     []
   );
 
+  const resources = useResources();
+
   return (
-    <Overlay>
-      <TitleControls />
-      <div>Game Paused</div>
-      <h1>Score {score}</h1>
+    <ScreenOverlay>
+      <div>Choose Your Upgrades</div>
+      <h1>
+        <small>$</small>
+        {resources}
+      </h1>
+      <Controls />
       <div>
         <button css={buttonCss} onClick={onResume}>
-          Resume
+          Done
         </button>
       </div>
-      <FooterControls />
-    </Overlay>
+    </ScreenOverlay>
   );
 };
 
-export default GamePaused;
+export default UpgradeSelection;

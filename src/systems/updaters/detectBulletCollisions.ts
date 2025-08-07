@@ -1,0 +1,81 @@
+import { groupBy, map, sum, without } from "lodash";
+import { v4 as uuid4 } from "uuid";
+import { BULLET_SIZE } from "../../entities/Bullet";
+import { bulletsState } from "../../state/bullets";
+import { enemiesState } from "../../state/enemies";
+import { explosionsState } from "../../state/explosions";
+import { gameState } from "../../state/game";
+import { resourcesState, scoreState } from "../../state/score";
+import { Explosion } from "../../types";
+import { distance } from "../../utils/Trigonometry";
+import { Updater } from "../types";
+import { elapsedState } from "../update";
+
+export const detectBulletCollisions: Updater = ({ get, set }) => {
+  const activeEnemies = get(enemiesState);
+  const activeBullets = get(bulletsState);
+  const deadBullets = [];
+  const enemyHits = [];
+
+  // Check every bullet against every enemy, updating/destroying as appropriate
+  for (const enemy of activeEnemies) {
+    for (const bullet of activeBullets) {
+      if (
+        distance(enemy.position, bullet.position) <
+        (enemy.size + BULLET_SIZE) / 2
+      ) {
+        deadBullets.push(bullet);
+        enemyHits.push({
+          id: enemy.id,
+          damage: bullet.damage,
+        });
+      }
+    }
+  }
+
+  const hitsByEnemyId = groupBy(enemyHits, "id");
+  const updatedEnemies = activeEnemies.map((enemy) => ({
+    ...enemy,
+    health: enemy.health - sum(map(hitsByEnemyId[enemy.id], "damage")),
+  }));
+
+  const didTriggerUpgrade = updatedEnemies.some(
+    (enemy) => enemy.health <= 0 && enemy.isUpgradeTrigger
+  );
+  if (didTriggerUpgrade) {
+    console.log({ didTriggerUpgrade });
+    set(gameState, "upgrading");
+  }
+
+  set(
+    enemiesState,
+    updatedEnemies.filter((enemy) => enemy.health > 0)
+  );
+  set(bulletsState, without(activeBullets, ...deadBullets));
+
+  const destroyedEnemies = updatedEnemies.filter((enemy) => enemy.health <= 0);
+
+  // Create an explosion for each destroyed enemy
+  const newExplosions: Explosion[] = destroyedEnemies.map((enemy) => ({
+    id: uuid4(),
+    startTime: get(elapsedState),
+    duration: 250,
+    position: enemy.position,
+    color: enemy.color,
+  }));
+
+  set(explosionsState, (explosions) => [...explosions, ...newExplosions]);
+
+  // Remove any "expired" explosions
+  const elapsed = get(elapsedState);
+  set(explosionsState, (explosions) =>
+    explosions.filter(
+      (explosion) => elapsed - explosion.startTime < explosion.duration
+    )
+  );
+
+  // Update the score
+  const pointsToAdd = sum(destroyedEnemies.map((enemy) => enemy.points));
+  set(scoreState, (score) => score + pointsToAdd);
+  set(resourcesState, (score) => score + pointsToAdd);
+};

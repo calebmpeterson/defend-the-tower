@@ -1,7 +1,7 @@
 import { SyntheticEvent, useMemo, useRef } from "react";
 import { Handlers, InputEvents } from "./types";
 
-const EVENTS = `onClick onContextMenu onDoubleClick onDrag onDragEnd onDragEnter onDragExit onDragLeave onDragOver onDragStart onDrop onMouseDown onMouseEnter onMouseLeave onMouseMove onMouseOut onMouseOver onMouseUp onWheel onPointerMove onTouchCancel onTouchEnd onTouchMove onTouchStart onKeyDown onKeyPress onKeyUp`;
+const EVENTS = `onClick onContextMenu onDoubleClick onDrag onDragEnd onDragEnter onDragExit onDragLeave onDragOver onDragStart onDrop onMouseDown onMouseEnter onMouseLeave onMouseMove onMouseOut onMouseOver onMouseUp onWheel onPointerDown onPointerMove onPointerUp onTouchCancel onTouchEnd onTouchMove onTouchStart onKeyDown onKeyPress onKeyUp`;
 
 const useInputHandlers = () => {
   const events = useRef<InputEvents>([]);

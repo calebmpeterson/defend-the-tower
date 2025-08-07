@@ -1,8 +1,10 @@
 import { css } from "@emotion/react";
-import { FC } from "react";
-import { useResources, useScore } from "../state/score";
+import { FC, Fragment } from "react";
+import { useScore } from "../state/score";
+import { useTowerHealth, useTowerMaxHealth } from "../state/tower";
+import DevTools from "./DevTools";
 
-const containerCss = css`
+const baseContainerCss = css`
   position: absolute;
   display: flex;
   justify-content: space-between;
@@ -12,18 +14,42 @@ const containerCss = css`
   pointer-events: none;
 `;
 
+const upperContainerCss = css`
+  ${baseContainerCss}
+  top: 0px;
+`;
+
+const lowerContainerCss = css`
+  ${baseContainerCss}
+  bottom: 0px;
+`;
+
 const HUD: FC = () => {
   const score = useScore();
-  const resources = useResources();
+
+  const health = useTowerHealth();
+  const maxHealth = useTowerMaxHealth();
 
   return (
-    <div css={containerCss}>
-      <div>SCORE {score}</div>
-      <div>
-        <small>$</small>
-        {resources}
+    <Fragment>
+      <div css={upperContainerCss}>
+        <div>SCORE {score}</div>
+
+        <div style={{ textAlign: "center" }}>
+          <small>Press ESCAPE to pause</small>
+        </div>
+
+        <div>
+          LIFE {health.toFixed(0)} / {maxHealth.toFixed(0)}
+        </div>
       </div>
-    </div>
+
+      <div css={lowerContainerCss}>
+        <div />
+        <DevTools />
+        <div />
+      </div>
+    </Fragment>
   );
 };
 

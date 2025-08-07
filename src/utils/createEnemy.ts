@@ -3,19 +3,20 @@ import { Enemy, Position } from "../types";
 
 type EnemyVariant = Pick<
   Enemy,
-  "size" | "speed" | "health" | "color" | "points"
+  "size" | "speed" | "health" | "color" | "points" | "isUpgradeTrigger"
 >;
 
 const variant = (weight: number, props: EnemyVariant) =>
   range(0, weight).map(() => props);
 
 const VARIANTS: EnemyVariant[] = flattenDeep([
-  variant(25, {
+  variant(20, {
     size: 10,
     speed: 100,
     color: "#f02",
     points: 10,
     health: 20,
+    isUpgradeTrigger: false,
   }),
 
   variant(10, {
@@ -24,6 +25,7 @@ const VARIANTS: EnemyVariant[] = flattenDeep([
     color: "#f03",
     points: 15,
     health: 20,
+    isUpgradeTrigger: false,
   }),
 
   variant(5, {
@@ -32,6 +34,7 @@ const VARIANTS: EnemyVariant[] = flattenDeep([
     color: "#f04",
     points: 25,
     health: 40,
+    isUpgradeTrigger: false,
   }),
 
   variant(1, {
@@ -40,6 +43,7 @@ const VARIANTS: EnemyVariant[] = flattenDeep([
     color: "#f05",
     points: 50,
     health: 200,
+    isUpgradeTrigger: true,
   }),
 ]);
 

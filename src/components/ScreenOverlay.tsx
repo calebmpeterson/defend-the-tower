@@ -15,6 +15,7 @@ const containerCss = css`
   background-color: #0008;
   color: #fff;
   z-index: 1;
+  cursor: auto;
 `;
 
 const ScreenOverlay: FC<PropsWithChildren<{}>> = ({ children }) => (

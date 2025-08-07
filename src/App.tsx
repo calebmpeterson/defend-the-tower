@@ -1,9 +1,9 @@
 import { css } from "@emotion/react";
 import { useState } from "react";
-import Controls from "./components/Controls";
 import GameOver from "./components/GameOver";
 import GamePaused from "./components/GamePaused";
 import HUD from "./components/HUD";
+import UpgradeSelection from "./components/UpgradeSelection";
 import { GameLoop } from "./engine";
 import Bullets from "./entities/Bullets";
 import Enemies from "./entities/Enemies";
@@ -21,29 +21,19 @@ const layoutCss = css`
   background: #222;
   color: #fff;
   font-family: monospace;
-
-  a {
-    color: #fff;
-  }
-  a:visited {
-    color: #fff;
-  }
 `;
 
 const overlayCss = (state: string) =>
-  state === "defeat" &&
+  state !== "running" &&
   css`
     filter: blur(4px);
   `;
 
 const sceneCss = css`
-  width: 70%;
+  width: 100%;
   position: relative;
   overflow: hidden;
-`;
-
-const controlsCss = css`
-  width: 30%;
+  cursor: crosshair;
 `;
 
 function App() {
@@ -64,12 +54,11 @@ function App() {
           <Bullets />
           <Explosions />
           <HUD />
-          {state === "paused" && <GamePaused />}
-        </div>
-        <div css={controlsCss}>
-          <Controls />
         </div>
       </div>
+
+      {state === "paused" && <GamePaused />}
+      {state === "upgrading" && <UpgradeSelection />}
       {state === "defeat" && <GameOver />}
     </GameLoop>
   );

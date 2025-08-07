@@ -31,3 +31,8 @@ export const pointerPositionState = atom<Position>({
 });
 
 export const usePointerPosition = () => useRecoilValue(pointerPositionState);
+
+export const nextWaypointState = atom<Position | null>({
+  key: "input/nextWaypoint",
+  default: null,
+});

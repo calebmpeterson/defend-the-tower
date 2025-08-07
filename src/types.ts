@@ -8,7 +8,7 @@ export type Size = {
   height: number;
 };
 
-export type GameState = "running" | "paused" | "defeat";
+export type GameState = "running" | "paused" | "upgrading" | "defeat";
 
 export type Enemy = {
   id: string;
@@ -19,6 +19,8 @@ export type Enemy = {
   color: string;
   /** How many points is this enemy worth when destroyed */
   points: number;
+  /** Is this enemy an upgrade trigger? */
+  isUpgradeTrigger: boolean;
 };
 
 export type Bullet = {

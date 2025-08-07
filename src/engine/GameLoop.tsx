@@ -6,9 +6,10 @@ import {
   useMemo,
   useRef,
 } from "react";
+import { useInputHandlers } from "../input";
+import { usePauseOnBlur } from "../state/game";
 import { useUpdate } from "../systems/update";
 import Timer from "../utils/Timer";
-import { useInputHandlers } from "../input";
 
 const GameLoop: FC<PropsWithChildren<{}>> = ({ children }) => {
   const container = useRef<HTMLDivElement>(null);
@@ -46,6 +47,8 @@ const GameLoop: FC<PropsWithChildren<{}>> = ({ children }) => {
       timer.unsubscribe(onTick);
     };
   }, [timer, onTick]);
+
+  usePauseOnBlur();
 
   return (
     <div ref={container} tabIndex={0} {...input.handlers}>
