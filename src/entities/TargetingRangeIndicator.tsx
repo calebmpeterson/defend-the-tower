@@ -7,8 +7,8 @@ const towerCss = (size: number) => css`
   position: absolute;
   width: ${size}px;
   height: ${size}px;
-  border: 1px solid #0f82;
-  box-shadow: inset 0 0 50px 1px #0f82;
+  border: 1px solid rgba(var(--bullet), 0.1);
+  box-shadow: inset 0 0 50px 1px rgba(var(--bullet), 0.1);
   border-radius: ${size}px;
 `;
 

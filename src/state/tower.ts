@@ -3,7 +3,7 @@ import { atom, useRecoilValue, useSetRecoilState } from "recoil";
 import { Position } from "../types";
 
 const DEFAULT_HEALTH = 100;
-const DEFAULT_SPEED = 100;
+const DEFAULT_SPEED = 125;
 export const DEFAULT_TOWER_HEALTH = DEFAULT_HEALTH;
 
 export const healthState = atom<number>({

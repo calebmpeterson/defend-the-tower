@@ -1,4 +1,4 @@
-import { groupBy, map, sum, without } from "lodash";
+import { flatMap, groupBy, map, sum, without } from "lodash";
 import { v4 as uuid4 } from "uuid";
 import { BULLET_SIZE } from "../../entities/Bullet";
 import { bulletsState } from "../../state/bullets";
@@ -56,13 +56,32 @@ export const detectBulletCollisions: Updater = ({ get, set }) => {
   const destroyedEnemies = updatedEnemies.filter((enemy) => enemy.health <= 0);
 
   // Create an explosion for each destroyed enemy
-  const newExplosions: Explosion[] = destroyedEnemies.map((enemy) => ({
-    id: uuid4(),
-    startTime: get(elapsedState),
-    duration: 250,
-    position: enemy.position,
-    color: enemy.color,
-  }));
+  const newExplosions: Explosion[] = [
+    // Explosions for destroyed enemies
+    ...destroyedEnemies.map((enemy) => ({
+      id: uuid4(),
+      startTime: get(elapsedState),
+      duration: 500,
+      position: enemy.position,
+      color: enemy.color,
+    })),
+    // Explosions for damaged enemies
+    ...flatMap(updatedEnemies, (enemy) => {
+      if (hitsByEnemyId[enemy.id]) {
+        return [
+          {
+            id: uuid4(),
+            startTime: get(elapsedState),
+            duration: 250,
+            position: enemy.position,
+            color: enemy.color,
+          },
+        ];
+      }
+
+      return [];
+    }),
+  ];
 
   set(explosionsState, (explosions) => [...explosions, ...newExplosions]);
 

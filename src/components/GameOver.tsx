@@ -9,8 +9,8 @@ import TitleControls from "./TitleControls";
 
 const buttonCss = css`
   background-color: transparent;
-  border: 1px solid #fff;
-  color: #fff;
+  border: 1px solid rgba(var(--fg));
+  color: rgba(var(--fg));
   padding: 10px 20px;
   border-radius: 3px;
   cursor: pointer;
@@ -19,7 +19,7 @@ const buttonCss = css`
 
   &:hover,
   &:focus {
-    background-color: #fff3;
+    background-color: rgba(var(--fg), 0.1);
   }
 `;
 

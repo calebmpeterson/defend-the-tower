@@ -26,7 +26,7 @@ const buttonCss = css`
   box-sizing: border-box;
 
   background-color: transparent;
-  border: 1px solid #fff;
+  border: 1px solid rgb(var(--fg));
   border-radius: 3px;
 
   cursor: pointer;
@@ -35,7 +35,7 @@ const buttonCss = css`
   transition: ${transition("background-color")};
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.025);
+    background-color: rgba(var(--fg), 0.05);
   }
 
   &:focus {
@@ -54,9 +54,9 @@ const valueCss = css`
 const costOfUpgradeCss = (canUpgrade: boolean) => css`
   width: 100%;
   text-align: center;
-  border-top: 1px solid #fff;
+  border-top: 1px solid rgb(var(--fg));
   padding: 5px 0;
-  color: ${canUpgrade ? "#0f0" : "#f08"};
+  color: rgb(var(${canUpgrade ? "--allowed" : "--prohibited"}));
   transition: ${transition("color")};
 `;
 

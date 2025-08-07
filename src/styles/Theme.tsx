@@ -2,8 +2,10 @@ import { css, Global } from "@emotion/react";
 import { FC, PropsWithChildren } from "react";
 
 interface Theme {
-  fg: string;
   bg: string;
+  fg: string;
+  allowed: string;
+  prohibited: string;
   player: string;
   bullet: string;
   enemy1: string;
@@ -14,8 +16,10 @@ interface Theme {
 
 export const themeVariablesCss = (theme: Theme) => css`
   :root {
-    --fg: ${theme.fg};
     --bg: ${theme.bg};
+    --fg: ${theme.fg};
+    --allowed: ${theme.allowed};
+    --prohibited: ${theme.prohibited};
     --player: ${theme.player};
     --bullet: ${theme.bullet};
     --enemy1: ${theme.enemy1};
@@ -26,9 +30,11 @@ export const themeVariablesCss = (theme: Theme) => css`
 `;
 
 export const DEFAULT_THEME: Theme = {
-  fg: "",
-  bg: "",
-  player: "",
+  bg: "0, 0, 0",
+  fg: "255, 255, 255",
+  allowed: "0, 255, 0",
+  prohibited: "255, 0, 128",
+  player: "255, 255, 255",
   bullet: "0, 255, 128",
   enemy1: "255, 0, 34",
   enemy2: "255, 0, 51",

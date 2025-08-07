@@ -11,7 +11,7 @@ const towerCss = css`
   position: absolute;
   width: ${SIZE}px;
   height: ${SIZE}px;
-  border: 2px solid #fff;
+  border: 2px solid rgb(var(--player));
   border-radius: ${SIZE}px;
   box-sizing: border-box;
 `;

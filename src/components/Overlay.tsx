@@ -12,9 +12,10 @@ const containerCss = css`
   align-items: center;
   justify-content: center;
   gap: 20px;
-  background-color: #0008;
-  color: #fff;
+  background-color: rgba(var(--bg), 0.1);
+  color: rgb(var(--fg));
   z-index: 1;
+  cursor: auto;
 `;
 
 const Overlay: FC<PropsWithChildren<{}>> = ({ children }) => (
