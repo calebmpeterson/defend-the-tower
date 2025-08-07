@@ -13,7 +13,7 @@ export const useGameState = () => useRecoilValue(gameState);
 export const usePauseOnBlur = () => {
   const setGameState = useSetRecoilState(gameState);
   const onBlur = useCallback(() => {
-    setGameState("paused");
+    setGameState((state) => (state === "running" ? "paused" : state));
   }, [setGameState]);
 
   useWindowBlur(onBlur);

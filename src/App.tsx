@@ -13,6 +13,7 @@ import Tower from "./entities/Tower";
 import { useGameState } from "./state/game";
 import { useInitializeScreen } from "./state/screen";
 import { useInitializeTower } from "./state/tower";
+import { ThemeProvider } from "./styles/Theme";
 
 const layoutCss = css`
   display: flex;
@@ -45,22 +46,24 @@ function App() {
   const state = useGameState();
 
   return (
-    <GameLoop>
-      <div css={[layoutCss, overlayCss(state)]}>
-        <div css={sceneCss} ref={setScreenRef}>
-          <Tower />
-          <TargetingRangeIndicator />
-          <Enemies />
-          <Bullets />
-          <Explosions />
-          <HUD />
+    <ThemeProvider>
+      <GameLoop>
+        <div css={[layoutCss, overlayCss(state)]}>
+          <div css={sceneCss} ref={setScreenRef}>
+            <Tower />
+            <TargetingRangeIndicator />
+            <Enemies />
+            <Bullets />
+            <Explosions />
+            <HUD />
+          </div>
         </div>
-      </div>
 
-      {state === "paused" && <GamePaused />}
-      {state === "upgrading" && <UpgradeSelection />}
-      {state === "defeat" && <GameOver />}
-    </GameLoop>
+        {state === "paused" && <GamePaused />}
+        {state === "upgrading" && <UpgradeSelection />}
+        {state === "defeat" && <GameOver />}
+      </GameLoop>
+    </ThemeProvider>
   );
 }
 

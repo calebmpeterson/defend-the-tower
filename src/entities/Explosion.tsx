@@ -1,25 +1,34 @@
-import { css } from "@emotion/react";
+import { css, keyframes } from "@emotion/react";
 import { FC } from "react";
 import { useElapsed } from "../systems/update";
 import type { Explosion as ExplosionProps } from "../types";
 import { position } from "../utils/Geometry";
 
+const explosionKeyframes = keyframes`
+  from {
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  to {
+    width: 100px;
+    height: 100px;
+    opacity: 0;
+  }
+`;
+
 const explosionCss = css`
   position: absolute;
   box-sizing: border-box;
+  border-radius: 50%;
+  animation-name: ${explosionKeyframes};
+  animation-timing-function: ease-out;
 `;
 
-const explosionStyle = (
-  props: ExplosionProps,
-  size: number,
-  opacity: number
-) => ({
+const explosionStyle = (props: ExplosionProps, size: number) => ({
   ...position(props.position.x, props.position.y, size),
-  width: size,
-  height: size,
-  borderRadius: size,
-  boxShadow: `inset 0 0 ${size / 2}px 1px ${props.color}`,
-  opacity,
+  boxShadow: `inset 0 0 10px 1px rgb(var(${props.color}))`,
+  animationDuration: `${props.duration}ms`,
 });
 
 const Explosion: FC<ExplosionProps> = (props) => {
@@ -27,10 +36,8 @@ const Explosion: FC<ExplosionProps> = (props) => {
   // How much time has passed since this explosion started?
   const timePassed = timeElapsed - props.startTime;
   const size = timePassed / 2;
-  const opacity = 1 - timePassed / props.duration;
-  return (
-    <div css={explosionCss} style={explosionStyle(props, size, opacity)} />
-  );
+
+  return <div css={explosionCss} style={explosionStyle(props, size)} />;
 };
 
 export default Explosion;

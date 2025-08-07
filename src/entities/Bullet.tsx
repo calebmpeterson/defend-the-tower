@@ -3,7 +3,6 @@ import { FC } from "react";
 import type { Bullet as BulletProps } from "../types";
 import { position } from "../utils/Geometry";
 
-const COLOR = "0, 255, 128";
 const SIZE = 3;
 
 export const BULLET_SIZE = SIZE;
@@ -16,8 +15,8 @@ const bulletCss = css`
   height: ${SIZE}px;
   box-sizing: border-box;
   border-radius: ${SIZE}px;
-  background-color: rgb(${COLOR});
-  box-shadow: 0 0 3px 1px rgba(${COLOR}, 0.33);
+  background-color: rgb(var(--bullet));
+  box-shadow: 0 0 3px 1px rgba(var(--bullet), 0.33);
 `;
 
 const Bullet: FC<BulletProps> = (props) => (

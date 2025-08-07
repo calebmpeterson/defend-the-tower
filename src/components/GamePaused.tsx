@@ -38,13 +38,13 @@ const GamePaused: FC = () => {
   return (
     <Overlay>
       <TitleControls />
-      <div>Game Paused</div>
-      <h1>Score {score}</h1>
+      <h1>Game Paused</h1>
       <div>
         <button css={buttonCss} onClick={onResume}>
           Resume
         </button>
       </div>
+      <h2>Score {score}</h2>
       <FooterControls />
     </Overlay>
   );

@@ -3,6 +3,7 @@ import { FC } from "react";
 import { useReset } from "../state/reset";
 import { useScore } from "../state/score";
 import { transition } from "../styles/Animation";
+import FooterControls from "./FooterControls";
 import ScreenOverlay from "./ScreenOverlay";
 import TitleControls from "./TitleControls";
 
@@ -30,13 +31,14 @@ const GameOver: FC = () => {
   return (
     <ScreenOverlay>
       <TitleControls />
-      <div>Game Over</div>
-      <h1>Final score {score}</h1>
+      <h1>Game Over</h1>
       <div>
         <button css={buttonCss} onClick={onReset}>
           Play again
         </button>
       </div>
+      <h2>Final score {score}</h2>
+      <FooterControls />
     </ScreenOverlay>
   );
 };

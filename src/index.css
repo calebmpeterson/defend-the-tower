@@ -2,24 +2,41 @@
   --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
     "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
+
+  --font-body: normal 400 1rem / normal "Cascadia Code", sans-serif;
+  --font-header: normal 400 1rem "Bruno Ace", sans-serif;
 }
 
 body {
   margin: 0;
-  font-family: var(--font-family);
+  font: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font: var(--font-header);
+  letter-spacing: 2px;
+}
+
+small {
+  font-size: 80%;
+}
+
 pre,
 code {
-  font-family: var(--font-family);
+  font: var(--font-body);
 }
 
 button {
-  font-family: var(--font-family);
-  font-weight: bold;
-  letter-spacing: 2px;
+  font: var(--font-body);
+  font-weight: 700;
+  letter-spacing: 4px;
   text-transform: uppercase;
 }
 

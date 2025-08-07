@@ -5,7 +5,7 @@
   "dependencies": {
     "@emotion/core": "^11.0.0",
     "@emotion/react": "^11.9.0",
-    "@mdi/js": "^6.7.96",
+    "@mdi/js": "7.4.47",
     "@mdi/react": "^1.6.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
