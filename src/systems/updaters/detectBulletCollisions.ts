@@ -43,7 +43,6 @@ export const detectBulletCollisions: Updater = ({ get, set }) => {
     (enemy) => enemy.health <= 0 && enemy.isUpgradeTrigger
   );
   if (didTriggerUpgrade) {
-    console.log({ didTriggerUpgrade });
     set(gameState, "upgrading");
   }
 

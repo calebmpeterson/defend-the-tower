@@ -42,7 +42,6 @@ export const useUpdate = (): UpdateFn =>
         }
 
         if (get(gameState) === "upgrading") {
-          console.log("upgrading");
           return;
         }
 

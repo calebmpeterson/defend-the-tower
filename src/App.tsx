@@ -8,6 +8,7 @@ import { GameLoop } from "./engine";
 import Bullets from "./entities/Bullets";
 import Enemies from "./entities/Enemies";
 import Explosions from "./entities/Explosions";
+import Pointer from "./entities/Pointer";
 import TargetingRangeIndicator from "./entities/TargetingRangeIndicator";
 import Tower from "./entities/Tower";
 import { useGameState } from "./state/game";
@@ -34,7 +35,7 @@ const sceneCss = css`
   width: 100%;
   position: relative;
   overflow: hidden;
-  cursor: crosshair;
+  cursor: none;
 `;
 
 function App() {
@@ -51,6 +52,7 @@ function App() {
         <div css={[layoutCss, overlayCss(state)]}>
           <div css={sceneCss} ref={setScreenRef}>
             <Tower />
+            <Pointer />
             <TargetingRangeIndicator />
             <Enemies />
             <Bullets />
