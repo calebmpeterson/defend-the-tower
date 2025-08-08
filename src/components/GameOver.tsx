@@ -7,6 +7,15 @@ import FooterControls from "./FooterControls";
 import ScreenOverlay from "./ScreenOverlay";
 import TitleControls from "./TitleControls";
 
+const layoutCss = css`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  width: fit-content;
+`;
+
 const buttonCss = css`
   background-color: transparent;
   border: 1px solid rgba(var(--fg));
@@ -31,13 +40,17 @@ const GameOver: FC = () => {
   return (
     <ScreenOverlay>
       <TitleControls />
-      <h1>Game Over</h1>
-      <div>
-        <button css={buttonCss} onClick={onReset}>
-          Play again
-        </button>
+
+      <div css={layoutCss}>
+        <h1>Game Over</h1>
+        <div>
+          <button css={buttonCss} onClick={onReset}>
+            Play again
+          </button>
+        </div>
+        <h2>Final score {score.toLocaleString()}</h2>
       </div>
-      <h2>Final score {score}</h2>
+
       <FooterControls />
     </ScreenOverlay>
   );

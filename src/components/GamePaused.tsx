@@ -8,6 +8,15 @@ import FooterControls from "./FooterControls";
 import ScreenOverlay from "./ScreenOverlay";
 import TitleControls from "./TitleControls";
 
+const layoutCss = css`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  width: fit-content;
+`;
+
 const buttonCss = css`
   background-color: transparent;
   border: 1px solid rgb(var(--fg));
@@ -38,13 +47,17 @@ const GamePaused: FC = () => {
   return (
     <ScreenOverlay>
       <TitleControls />
-      <h1>Game Paused</h1>
-      <div>
-        <button css={buttonCss} onClick={onResume}>
-          Resume
-        </button>
+
+      <div css={layoutCss}>
+        <h1>Game Paused</h1>
+        <div>
+          <button css={buttonCss} onClick={onResume}>
+            Resume
+          </button>
+        </div>
+        <h2>Score {score.toLocaleString()}</h2>
       </div>
-      <h2>Score {score}</h2>
+
       <FooterControls />
     </ScreenOverlay>
   );

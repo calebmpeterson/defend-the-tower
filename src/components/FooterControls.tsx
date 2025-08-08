@@ -4,6 +4,7 @@ import { FC } from "react";
 const containerCss = css`
   text-align: center;
   opacity: 0.66;
+  margin-bottom: 20px;
 `;
 
 const FooterControls: FC = () => (

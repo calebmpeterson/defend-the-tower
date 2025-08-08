@@ -7,6 +7,15 @@ import { transition } from "../styles/Animation";
 import Controls from "./Controls";
 import ScreenOverlay from "./ScreenOverlay";
 
+const layoutCss = css`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  width: fit-content;
+`;
+
 const buttonCss = css`
   background-color: transparent;
   border: 1px solid #fff;
@@ -36,17 +45,23 @@ const UpgradeSelection: FC = () => {
 
   return (
     <ScreenOverlay>
-      <div>Choose Your Upgrades</div>
-      <h1>
-        <small>$</small>
-        {resources}
-      </h1>
-      <Controls />
-      <div>
-        <button css={buttonCss} onClick={onResume}>
-          Done
-        </button>
+      <div />
+
+      <div css={layoutCss}>
+        <div>Choose Your Upgrades</div>
+        <h1>
+          <small>$</small>
+          {resources}
+        </h1>
+        <Controls />
+        <div>
+          <button css={buttonCss} onClick={onResume}>
+            Done
+          </button>
+        </div>
       </div>
+
+      <div />
     </ScreenOverlay>
   );
 };

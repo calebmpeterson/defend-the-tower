@@ -10,7 +10,7 @@ const containerCss = css`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   gap: 20px;
   background-color: rgba(var(--bg), 0.1);
   color: rgb(var(--fg));
