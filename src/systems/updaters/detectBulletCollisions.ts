@@ -66,7 +66,7 @@ export const detectBulletCollisions: Updater = ({ get, set }) => {
     })),
     // Explosions for damaged enemies
     ...flatMap(updatedEnemies, (enemy) => {
-      if (hitsByEnemyId[enemy.id]) {
+      if (hitsByEnemyId[enemy.id] && false) {
         return [
           {
             id: uuid4(),
@@ -83,14 +83,6 @@ export const detectBulletCollisions: Updater = ({ get, set }) => {
   ];
 
   set(explosionsState, (explosions) => [...explosions, ...newExplosions]);
-
-  // Remove any "expired" explosions
-  const elapsed = get(elapsedState);
-  set(explosionsState, (explosions) =>
-    explosions.filter(
-      (explosion) => elapsed - explosion.startTime < explosion.duration
-    )
-  );
 
   // Update the score
   const pointsToAdd = sum(destroyedEnemies.map((enemy) => enemy.points));

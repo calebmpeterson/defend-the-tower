@@ -1,4 +1,5 @@
 import { flattenDeep, range, sample } from "lodash";
+import { v4 as uuid4 } from "uuid";
 import { Enemy, Position } from "../types";
 
 type EnemyVariant = Pick<
@@ -10,7 +11,7 @@ const variant = (weight: number, props: EnemyVariant) =>
   range(0, weight).map(() => props);
 
 const VARIANTS: EnemyVariant[] = flattenDeep([
-  variant(20, {
+  variant(50, {
     size: 10,
     speed: 100,
     color: "--enemy1",
@@ -21,16 +22,16 @@ const VARIANTS: EnemyVariant[] = flattenDeep([
 
   variant(10, {
     size: 6,
-    speed: 160,
+    speed: 175,
     color: "--enemy2",
     points: 15,
     health: 20,
     isUpgradeTrigger: false,
   }),
 
-  variant(5, {
+  variant(15, {
     size: 20,
-    speed: 60,
+    speed: 100,
     color: "--enemy3",
     points: 25,
     health: 40,
@@ -39,7 +40,7 @@ const VARIANTS: EnemyVariant[] = flattenDeep([
 
   variant(1, {
     size: 40,
-    speed: 20,
+    speed: 75,
     color: "--enemy4",
     points: 50,
     health: 200,
@@ -47,20 +48,24 @@ const VARIANTS: EnemyVariant[] = flattenDeep([
   }),
 ]);
 
-const createEnemy = (target: Position, distance: number): Enemy => {
-  const angle = Math.random() * 2 * Math.PI;
-  const x = target.x + Math.cos(angle) * distance;
-  const y = target.y + Math.sin(angle) * distance;
-  const newEnemy = {
-    id: `enemy-${Date.now()}`,
-    position: {
-      x,
-      y,
-    },
-    ...sample(VARIANTS)!,
-  };
+const createEnemies = (
+  target: Position,
+  distance: number,
+  quantity: number
+): Enemy[] => {
+  const baseAngle = Math.random() * 2 * Math.PI;
 
-  return newEnemy;
+  return range(0, quantity).map((index) => {
+    const angle = baseAngle + Math.random() / Math.PI;
+    return {
+      id: uuid4(),
+      position: {
+        x: target.x + Math.cos(angle) * (distance + index),
+        y: target.y + Math.sin(angle) * (distance + index),
+      },
+      ...sample(VARIANTS)!,
+    };
+  });
 };
 
-export default createEnemy;
+export default createEnemies;

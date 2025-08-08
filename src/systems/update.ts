@@ -9,6 +9,7 @@ import { shootBullets } from "./updaters/shootBullets";
 import { spawnEnemies } from "./updaters/spawnEnemies";
 import { updateBullets } from "./updaters/updateBullets";
 import { updateEnemies } from "./updaters/updateEnemies";
+import { updateExplosions } from "./updaters/updateExplosions";
 import { updateGameState } from "./updaters/updateGameState";
 import { updateGameTimer } from "./updaters/updateGameTimer";
 import { updateKeyboardState } from "./updaters/updateKeyboardState";
@@ -59,6 +60,8 @@ export const useUpdate = (): UpdateFn =>
         shootBullets({ get, set }, deltaT, update);
 
         updateBullets({ get, set }, deltaT, update);
+
+        updateExplosions({ get, set }, deltaT, update);
 
         detectBulletCollisions({ get, set }, deltaT, update);
 

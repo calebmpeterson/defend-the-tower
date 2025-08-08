@@ -40,7 +40,7 @@ export const useTowerMaxHealth = () => useRecoilValue(maxHealthState);
 
 export const rateOfFireState = atom<number>({
   key: "tower/rateOfFire",
-  default: 1,
+  default: 2,
 });
 
 export const targetingRangeState = atom<number>({

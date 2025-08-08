@@ -31,6 +31,7 @@ const overlayCss = (state: string) =>
   state !== "running" &&
   css`
     filter: blur(4px);
+    box-shadow: 0 0 4px 4px rgb(var(--bg));
   `;
 
 const sceneCss = css`

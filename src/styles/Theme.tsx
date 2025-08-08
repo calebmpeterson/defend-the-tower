@@ -35,7 +35,7 @@ export const DEFAULT_THEME: Theme = {
   allowed: "0, 255, 0",
   prohibited: "255, 0, 128",
   player: "255, 255, 255",
-  bullet: "0, 255, 128",
+  bullet: "0, 220, 255",
   enemy1: "255, 0, 34",
   enemy2: "255, 0, 51",
   enemy3: "255, 0, 68",

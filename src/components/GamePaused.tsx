@@ -5,7 +5,7 @@ import { gameState } from "../state/game";
 import { useScore } from "../state/score";
 import { transition } from "../styles/Animation";
 import FooterControls from "./FooterControls";
-import Overlay from "./Overlay";
+import ScreenOverlay from "./ScreenOverlay";
 import TitleControls from "./TitleControls";
 
 const buttonCss = css`
@@ -36,7 +36,7 @@ const GamePaused: FC = () => {
   );
 
   return (
-    <Overlay>
+    <ScreenOverlay>
       <TitleControls />
       <h1>Game Paused</h1>
       <div>
@@ -46,7 +46,7 @@ const GamePaused: FC = () => {
       </div>
       <h2>Score {score}</h2>
       <FooterControls />
-    </Overlay>
+    </ScreenOverlay>
   );
 };
 
