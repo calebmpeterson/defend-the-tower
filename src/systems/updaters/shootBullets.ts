@@ -22,9 +22,10 @@ export const shootBullets: Updater = ({ get, set }) => {
   // The closer enemies are the target(s)
   const targetingCapacity = get(targetingCapabilityState);
   const targetingRange = get(targetingRangeState);
+  const enemies = get(enemiesState);
   const targets = take(
     sortBy(
-      get(enemiesState).filter(
+      enemies.filter(
         (enemy) => distance(towerPosition, enemy.position) <= targetingRange
       ),
       (enemy) => distance(towerPosition, enemy.position)

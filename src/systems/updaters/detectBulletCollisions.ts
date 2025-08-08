@@ -76,9 +76,9 @@ export const detectBulletCollisions: Updater = ({ get, set }) => {
       position: enemy.position,
       color: enemy.color,
     })),
-    // Explosions for damaged enemies
+    // Explosions for damaged enemies (sometimes)
     ...flatMap(updatedEnemies, (enemy) => {
-      if (hitsByEnemyId[enemy.id]) {
+      if (hitsByEnemyId[enemy.id] && Math.random() < 0.25) {
         return [
           {
             id: uuid4(),
