@@ -22,9 +22,8 @@ const layoutCss = css`
   width: 100%;
   overflow: hidden;
   overscroll-behavior: none;
-  background: #222;
-  color: #fff;
-  font-family: monospace;
+  background: rgb(var(--bg));
+  color: rgb(var(--fg));
 `;
 
 const overlayCss = (state: string) =>

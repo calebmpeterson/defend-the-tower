@@ -1,14 +1,16 @@
 import { targetingCapabilityState } from "../../state/bullets";
 import { enemiesState } from "../../state/enemies";
 import { screenState } from "../../state/screen";
-import createEnemies from "../../utils/createEnemies";
+import createWaveOfEnemies from "../../utils/createWaveOfEnemies";
 import { Updater } from "../types";
 
 export const spawnEnemies: Updater = ({ get, set }) => {
   const maxTargets = get(targetingCapabilityState);
   const enemiesCount = get(enemiesState).length;
 
-  if (enemiesCount < maxTargets * 10) {
+  const factor = maxTargets * 10;
+
+  if (enemiesCount < factor) {
     const screen = get(screenState);
     const screenMinimum = Math.min(screen.width, screen.height);
 
@@ -18,7 +20,7 @@ export const spawnEnemies: Updater = ({ get, set }) => {
     };
 
     const distance = screenMinimum * 0.8;
-    const newEnemy = createEnemies(position, distance, 10 + maxTargets * 10);
+    const newEnemy = createWaveOfEnemies(position, distance, 10 + factor);
 
     set(enemiesState, (enemies) => [...enemies, ...newEnemy]);
   }
