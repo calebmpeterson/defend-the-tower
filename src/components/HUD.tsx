@@ -2,7 +2,6 @@ import { css } from "@emotion/react";
 import { FC, Fragment } from "react";
 import { useScore } from "../state/score";
 import { useTowerHealth, useTowerMaxHealth } from "../state/tower";
-import DevTools from "./DevTools";
 
 const baseContainerCss = css`
   position: absolute;
@@ -35,10 +34,6 @@ const HUD: FC = () => {
       <div css={upperContainerCss}>
         <div>SCORE {score}</div>
 
-        <div style={{ textAlign: "center" }}>
-          <small>Press ESCAPE to pause</small>
-        </div>
-
         <div>
           LIFE {health.toFixed(0)} / {maxHealth.toFixed(0)}
         </div>
@@ -46,7 +41,10 @@ const HUD: FC = () => {
 
       <div css={lowerContainerCss}>
         <div />
-        <DevTools />
+
+        <div style={{ textAlign: "center" }}>
+          <small>Press ESCAPE to pause</small>
+        </div>
         <div />
       </div>
     </Fragment>
