@@ -51,7 +51,7 @@ const UpgradeSelection: FC = () => {
         <div>Choose Your Upgrades</div>
         <h1>
           <small>$</small>
-          {resources}
+          {resources.toLocaleString()}
         </h1>
         <Controls />
         <div>

@@ -30,3 +30,15 @@ export const targetingCapabilityState = atom<number>({
   key: "targetingCapability",
   default: 1,
 });
+
+// Probability of a critical hit
+export const probabilityOfCriticalHitState = atom<number>({
+  key: "probabilityOfCriticalHit",
+  default: 0,
+});
+
+// Probability of a critical hit
+export const probabilityOfPenetratingHitState = atom<number>({
+  key: "probabilityOfPenetratingHit",
+  default: 0,
+});

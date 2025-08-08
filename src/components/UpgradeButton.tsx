@@ -1,6 +1,6 @@
 import { css } from "@emotion/react";
 import { noop } from "lodash";
-import { FC, memo } from "react";
+import { FC, memo, ReactNode } from "react";
 import { useRecoilState } from "recoil";
 import {
   upgradeState,
@@ -12,7 +12,7 @@ import getUpgradeCost from "../utils/getUpgradeCost";
 
 interface Props {
   label: string;
-  value: string | number;
+  value: string | number | ReactNode;
   property: string;
   onUpgrade: () => void;
 }

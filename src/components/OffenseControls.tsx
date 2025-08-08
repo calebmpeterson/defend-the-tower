@@ -1,11 +1,16 @@
+import { mdiSwordCross } from "@mdi/js";
 import { FC, memo } from "react";
 import { useRecoilCallback, useRecoilValue } from "recoil";
-import { mdiSwordCross } from "@mdi/js";
-import { bulletDamageState, targetingCapabilityState } from "../state/bullets";
+import {
+  bulletDamageState,
+  probabilityOfCriticalHitState,
+  probabilityOfPenetratingHitState,
+  targetingCapabilityState,
+} from "../state/bullets";
 
 import { rateOfFireState, targetingRangeState } from "../state/tower";
-import Header from "./Header";
 import ControlRow from "./ControlRow";
+import Header from "./Header";
 import UpgradeButton from "./UpgradeButton";
 
 const OffenseControls: FC = () => {
@@ -45,6 +50,28 @@ const OffenseControls: FC = () => {
     []
   );
 
+  const probabilityOfCriticalHit = useRecoilValue(
+    probabilityOfCriticalHitState
+  );
+  const onUpgradeProbabilityOfCriticalHit = useRecoilCallback(
+    ({ set }) =>
+      () => {
+        set(probabilityOfCriticalHitState, (c) => c + 0.01);
+      },
+    []
+  );
+
+  const probabilityOfPenetratingHit = useRecoilValue(
+    probabilityOfPenetratingHitState
+  );
+  const onUpgradeProbabilityOfPenetratingHit = useRecoilCallback(
+    ({ set }) =>
+      () => {
+        set(probabilityOfPenetratingHitState, (c) => c + 0.01);
+      },
+    []
+  );
+
   return (
     <div>
       <Header iconPath={mdiSwordCross}>Offense</Header>
@@ -75,6 +102,31 @@ const OffenseControls: FC = () => {
           label="Maximum targets"
           value={targetingCapability.toFixed(0)}
           onUpgrade={onUpgradeTargetingCapability}
+        />
+      </ControlRow>
+
+      <ControlRow>
+        <UpgradeButton
+          property="probability-of-critical-hit"
+          label="Chance of Critical Hit"
+          value={
+            <span>
+              {(probabilityOfCriticalHit * 100).toFixed(0)}
+              <small>%</small>
+            </span>
+          }
+          onUpgrade={onUpgradeProbabilityOfCriticalHit}
+        />
+        <UpgradeButton
+          property="probability-of-penetrating-hit"
+          label="Chance of Penetration"
+          value={
+            <span>
+              {(probabilityOfPenetratingHit * 100).toFixed(0)}
+              <small>%</small>
+            </span>
+          }
+          onUpgrade={onUpgradeProbabilityOfPenetratingHit}
         />
       </ControlRow>
     </div>

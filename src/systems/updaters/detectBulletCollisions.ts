@@ -1,7 +1,11 @@
 import { flatMap, groupBy, map, sum, without } from "lodash";
 import { v4 as uuid4 } from "uuid";
 import { BULLET_SIZE } from "../../entities/Bullet";
-import { bulletsState } from "../../state/bullets";
+import {
+  bulletsState,
+  probabilityOfCriticalHitState,
+  probabilityOfPenetratingHitState,
+} from "../../state/bullets";
 import { enemiesState } from "../../state/enemies";
 import { explosionsState } from "../../state/explosions";
 import { gameState } from "../../state/game";
@@ -17,6 +21,9 @@ export const detectBulletCollisions: Updater = ({ get, set }) => {
   const deadBullets = [];
   const enemyHits = [];
 
+  const probabilityOfCriticalHit = get(probabilityOfCriticalHitState);
+  const probabilityOfPenetratingHit = get(probabilityOfPenetratingHitState);
+
   // Check every bullet against every enemy, updating/destroying as appropriate
   for (const enemy of activeEnemies) {
     for (const bullet of activeBullets) {
@@ -24,10 +31,15 @@ export const detectBulletCollisions: Updater = ({ get, set }) => {
         distance(enemy.position, bullet.position) <
         (enemy.size + BULLET_SIZE) / 2
       ) {
-        deadBullets.push(bullet);
+        const failedToPenetrate = Math.random() > probabilityOfPenetratingHit;
+        if (failedToPenetrate) {
+          deadBullets.push(bullet);
+        }
+
+        const isCriticalHit = Math.random() < probabilityOfCriticalHit;
         enemyHits.push({
           id: enemy.id,
-          damage: bullet.damage,
+          damage: isCriticalHit ? enemy.health : bullet.damage,
         });
       }
     }
@@ -66,7 +78,7 @@ export const detectBulletCollisions: Updater = ({ get, set }) => {
     })),
     // Explosions for damaged enemies
     ...flatMap(updatedEnemies, (enemy) => {
-      if (hitsByEnemyId[enemy.id] && false) {
+      if (hitsByEnemyId[enemy.id]) {
         return [
           {
             id: uuid4(),

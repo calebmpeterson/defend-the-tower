@@ -17,7 +17,7 @@ const pointerCss = css`
   border-radius: ${SIZE}px;
   background-color: rgb(var(--fg));
   box-shadow: 0 0 3px 1px rgba(var(--fg), 0.33);
-  opacity: 0.1;
+  opacity: 0.33;
 `;
 
 const isVisibleState = selector<boolean>({
