@@ -20,6 +20,8 @@ const layoutCss = css`
   display: flex;
   height: 100vh;
   width: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
   background: #222;
   color: #fff;
   font-family: monospace;
