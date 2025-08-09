@@ -8,7 +8,7 @@ export const spawnEnemies: Updater = ({ get, set }) => {
   const maxTargets = get(targetingCapabilityState);
   const enemiesCount = get(enemiesState).length;
 
-  const factor = maxTargets * 10;
+  const factor = maxTargets * 20;
 
   if (enemiesCount < factor) {
     const screen = get(screenState);

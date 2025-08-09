@@ -3,6 +3,11 @@ export type Position = {
   y: number;
 };
 
+export type Velocity = {
+  vx: number;
+  vy: number;
+};
+
 export type Size = {
   width: number;
   height: number;
