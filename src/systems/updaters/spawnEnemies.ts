@@ -1,3 +1,4 @@
+import { flatten, range, sample } from "lodash";
 import { targetingCapabilityState } from "../../state/bullets";
 import { enemiesState } from "../../state/enemies";
 import { screenState } from "../../state/screen";
@@ -8,7 +9,8 @@ export const spawnEnemies: Updater = ({ get, set }) => {
   const maxTargets = get(targetingCapabilityState);
   const enemiesCount = get(enemiesState).length;
 
-  const factor = maxTargets * 20;
+  const groupsToSpawn = sample([1, 2, 2, 3, 5]) ?? 2;
+  const factor = maxTargets * 10;
 
   if (enemiesCount < factor) {
     const screen = get(screenState);
@@ -20,8 +22,14 @@ export const spawnEnemies: Updater = ({ get, set }) => {
     };
 
     const distance = screenMinimum * 0.8;
-    const newEnemy = createWaveOfEnemies(position, distance, 10 + factor);
 
-    set(enemiesState, (enemies) => [...enemies, ...newEnemy]);
+    set(enemiesState, (enemies) => [
+      ...enemies,
+      ...flatten(
+        range(0, groupsToSpawn).map(() =>
+          createWaveOfEnemies(position, distance, (10 + factor) / groupsToSpawn)
+        )
+      ),
+    ]);
   }
 };

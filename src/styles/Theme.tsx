@@ -30,7 +30,7 @@ export const themeVariablesCss = (theme: Theme) => css`
 `;
 
 export const DEFAULT_THEME: Theme = {
-  bg: "0, 20, 30",
+  bg: "0, 10, 20",
   fg: "255, 255, 255",
   allowed: "0, 255, 0",
   prohibited: "255, 0, 128",
