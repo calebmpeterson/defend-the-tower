@@ -3,6 +3,7 @@ import { v4 as uuid4 } from "uuid";
 import { TOWER_SIZE } from "../../entities/Tower";
 import { enemiesState } from "../../state/enemies";
 import { explosionsState } from "../../state/explosions";
+import { screenShakeState } from "../../state/screen";
 import { healthState, towerPositionState } from "../../state/tower";
 import { Explosion } from "../../types";
 import { distance } from "../../utils/Trigonometry";
@@ -32,6 +33,10 @@ export const detectTowerCollisions: Updater = ({ get, set }) => {
     position: enemy.position,
     color: "--player",
   }));
+
+  if (totalDamage > 0) {
+    set(screenShakeState, Date.now());
+  }
 
   set(explosionsState, (explosions) => [...explosions, ...newExplosions]);
 };

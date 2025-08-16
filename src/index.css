@@ -43,6 +43,7 @@ button {
   font-weight: 700;
   letter-spacing: 4px;
   text-transform: uppercase;
+  background-color: rgb(--bg, 0.8);
 }
 
 a {

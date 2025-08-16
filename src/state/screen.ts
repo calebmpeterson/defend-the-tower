@@ -7,6 +7,11 @@ export const screenState = atom<Size>({
   default: { width: 1, height: 1 },
 });
 
+export const screenShakeState = atom<number | null>({
+  key: "screen/shake",
+  default: null,
+});
+
 export const useInitializeScreen = (sceneElement: HTMLDivElement | null) => {
   const setSize = useSetRecoilState(screenState);
 
